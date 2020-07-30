@@ -5,20 +5,22 @@ using UnityEngine;
 public class MainCharacter : MonoBehaviour
 {
     [SerializeField] private float speed;
-    void Start()
+
+    public Transform initialTransform { get; private set; }
+
+    private void Awake()
     {
-        
+        initialTransform = transform;
     }
 
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        if (Input.GetKey(KeyCode.LeftArrow))
+        if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
         {
-            transform.position += Vector3.left * speed;
-        } else if (Input.GetKey(KeyCode.RightArrow))
+            transform.Translate(Vector3.left * speed * Time.deltaTime);
+        } else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
         {
-            transform.position += Vector3.right * speed;
+            transform.Translate(Vector3.right * speed * Time.deltaTime);
         }
     }
 }

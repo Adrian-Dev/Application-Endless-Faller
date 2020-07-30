@@ -4,13 +4,23 @@ public class MovingPlatform : MonoBehaviour
 {
     [SerializeField] private float speed;
 
-    void Start()
+    LevelManager levelManager;
+
+    private void Awake()
     {
+        levelManager = FindObjectOfType<LevelManager>();
     }
 
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-            transform.position += Vector3.up * speed;
+        transform.Translate(Vector3.up * speed * Time.deltaTime);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag.Equals("Player"))
+        {
+            levelManager.IncrementScore();
+        }
     }
 }

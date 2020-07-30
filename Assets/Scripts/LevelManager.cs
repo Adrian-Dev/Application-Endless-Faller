@@ -6,15 +6,13 @@ using UnityEngine;
 public class LevelManager : MonoBehaviour
 {
     public int Score { get; private set; }
-    
-    void Start()
-    {
-        
-    }
 
-    void Update()
+    GameObject player;
+    MainCharacter mainCharacter;
+    private void Awake()
     {
-        
+        player = GameObject.FindWithTag("Player");
+        mainCharacter = player.GetComponent<MainCharacter>();
     }
 
     public void IncrementScore()
@@ -25,6 +23,7 @@ public class LevelManager : MonoBehaviour
     public void Reset()
     {
         Score = 0;
-        // reset logic
+        player.transform.position = mainCharacter.initialTransform.position;
+        player.transform.rotation = mainCharacter.initialTransform.rotation;
     }
 }
