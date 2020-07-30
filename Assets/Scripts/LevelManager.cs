@@ -7,16 +7,6 @@ public class LevelManager : MonoBehaviour
 {
     public int Score { get; private set; }
     
-    void Start()
-    {
-        
-    }
-
-    void Update()
-    {
-        
-    }
-
     public void IncrementScore()
     {
         Score++;
