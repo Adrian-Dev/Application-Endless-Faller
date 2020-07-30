@@ -10,10 +10,20 @@ public class Timer : MonoBehaviour
 
     [SerializeField] float timeForIncreasingSpawnRate = 5f;
     private float timeNext;
+
+    PlatformSpawnController platformSpawnController;
+
     private void Awake()
     {
+        platformSpawnController = FindObjectOfType<PlatformSpawnController>();
         timeElapsed = 0f;
         timeNext = timeForIncreasingSpawnRate;
+
+    }
+
+    private void Start()
+    {
+        platformSpawnController.SpawnPlatform();
     }
 
     void Update()
@@ -21,9 +31,11 @@ public class Timer : MonoBehaviour
         timeElapsed += Time.deltaTime;
         textTimeElapsed.text = "Time: " + timeElapsed.ToString("0");
 
-        if(timeElapsed > timeNext) //Increase spawn rate and speed of platforms
+        if(timeElapsed > timeNext) // TODO Increase spawn rate and speed of platforms
         {
             timeNext += timeForIncreasingSpawnRate;
+
+            platformSpawnController.SpawnPlatform();
         }
     }
 }
