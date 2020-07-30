@@ -16,8 +16,8 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator LoadScene(string sceneName)
     {
-        Debug.Log("Loading game!");
-        yield return new WaitForSeconds(4);
+        Debug.Log("Loading scene named: '" + sceneName + "'");
+        yield return new WaitForSeconds(0.1f);
         EditorSceneManager.LoadScene(sceneName);
     }
 }

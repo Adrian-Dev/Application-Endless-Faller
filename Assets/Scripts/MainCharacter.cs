@@ -6,11 +6,11 @@ public class MainCharacter : MonoBehaviour
 {
     [SerializeField] private float speed;
 
-    public Transform initialTransform { get; private set; }
+    public Vector3 initialTransform { get; private set; }
 
     private void Awake()
     {
-        initialTransform = transform;
+        initialTransform = transform.position;
     }
 
     void FixedUpdate()

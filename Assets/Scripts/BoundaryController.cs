@@ -4,15 +4,21 @@ using UnityEngine;
 
 public class BoundaryController : MonoBehaviour
 {
+    LevelManager levelManager;
+    private void Awake()
+    {
+        levelManager = FindObjectOfType<LevelManager>();
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag.Equals("Player"))
         {
-            Destroy(other.gameObject);
+            levelManager.Reset();
         }
-        //else if (other.tag.Equals("MovingPlatform"))
-        //{
-        //    Destroy(other.gameObject);
-        //}
+        else if (other.tag.Equals("MovingPlatform"))
+        {
+            Destroy(other.transform.parent.gameObject);
+        }
     }
 }
