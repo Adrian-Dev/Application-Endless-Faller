@@ -9,6 +9,7 @@ public class PlatformSpawnController : MonoBehaviour
     [SerializeField] Material platformHighScoreMaterial;
     [SerializeField] Vector3 initialPosition;
 
+    [Tooltip("Initial platforms speed")]
     [SerializeField] float speed;
 
     public float Speed

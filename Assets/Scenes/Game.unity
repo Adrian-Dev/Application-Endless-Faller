@@ -2913,6 +2913,7 @@ MonoBehaviour:
   platformHighScoreMaterial: {fileID: 2100000, guid: 9dad24aaa04b2d647bc8da1cdb7ce8ea,
     type: 2}
   initialPosition: {x: 0, y: -6.4, z: 0}
+  speed: 1
   spawnRateController: {fileID: 11400000, guid: c9ae6537d032dc542972a911fc4bf464,
     type: 2}
 --- !u!4 &1992097853
