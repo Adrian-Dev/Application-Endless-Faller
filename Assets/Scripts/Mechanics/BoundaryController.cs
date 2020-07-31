@@ -26,6 +26,7 @@ public class BoundaryController : MonoBehaviour
 
     IEnumerator LoseGame()
     {
+        levelController.SetGameLost();
         mainCharacterController.Explosion();
         yield return new WaitForSeconds(0.5f);
         levelController.AllowPauseGame(false);

@@ -18,6 +18,8 @@ public class LevelController : MonoBehaviour
     private bool paused; // switch values for showing menu (game is paused) and closing menu (game is playing) 
     private bool m_allow_pause;
 
+    private bool isGameLost;
+
     MainCharacterController mainCharacterController;
     PlatformSpawnController platformSpawnController;
     HighScoreController highScoreController;
@@ -84,7 +86,7 @@ public class LevelController : MonoBehaviour
     }
 
     /// <summary>
-    /// Allows the game to be paused and resumed each time the user presses the "pause button"
+    /// Allows or prevents the game to be paused and resumed each time the user presses the "pause button"
     /// </summary>
     public void AllowPauseGame(bool value)
     {
@@ -125,7 +127,15 @@ public class LevelController : MonoBehaviour
 
     public void IncrementScore()
     {
-        score++;
+        if (!isGameLost) // Prevents increasing score if player already lose but the game is still running
+        {
+            score++;
+        }
+    }
+
+    public void SetGameLost()
+    {
+        isGameLost = true;
     }
 
     public void Restart()
@@ -139,6 +149,8 @@ public class LevelController : MonoBehaviour
         highScoreController.ReadHighScore();
 
         m_allow_pause = true;
+
+        isGameLost = false;
 
         FadeOff();
         ResumeGame();

@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ScoreController : MonoBehaviour
+public class ScoreUIController : MonoBehaviour
 {
-    //TODO use a class for score and highscore
     [SerializeField] Text textCurrentScore;
 
     LevelController levelController;
