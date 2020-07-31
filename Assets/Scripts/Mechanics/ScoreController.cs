@@ -16,6 +16,6 @@ public class ScoreController : MonoBehaviour
 
     void Update()
     {
-        textCurrentScore.text = levelController.Score.ToString(); //TODO think of a more efficient way of doing this instead of using Update. Maybe delegates in LevelManager?
+        textCurrentScore.text = levelController.score.ToString(); //TODO think of a more efficient way of doing this instead of using Update. Maybe delegates in LevelManager?
     }
 }

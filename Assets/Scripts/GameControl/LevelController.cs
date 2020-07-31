@@ -9,9 +9,10 @@ public class LevelController : MonoBehaviour
     [SerializeField] Button continueButton;
     [SerializeField] Button restartButton;
     [SerializeField] Text scoreText;
-    [SerializeField] Text scoreMaxText;
+    [SerializeField] Text highScoreText;
+    [SerializeField] Text infoText;
 
-    public int Score { get; private set; }
+    public int score { get; private set; }
 
     PauseController pauseController;
     private bool paused; // switch values for showing menu (game is paused) and closing menu (game is playing) 
@@ -19,12 +20,14 @@ public class LevelController : MonoBehaviour
 
     MainCharacterController mainCharacterController;
     PlatformSpawnController platformSpawnController;
+    HighScoreController highScoreController;
 
     private void Awake()
     {
         pauseController = GetComponent<PauseController>();
         mainCharacterController = FindObjectOfType<MainCharacterController>();
         platformSpawnController = FindObjectOfType<PlatformSpawnController>();
+        highScoreController = FindObjectOfType<HighScoreController>();
     }
 
     void Start()
@@ -95,18 +98,22 @@ public class LevelController : MonoBehaviour
         {
             restartButton.gameObject.SetActive(true);
             continueButton.gameObject.SetActive(false);
-            scoreText.transform.parent.gameObject.SetActive(true);
-            scoreMaxText.transform.parent.gameObject.SetActive(true);
-            scoreText.text = Score.ToString();
         }
         else
         {
             restartButton.gameObject.SetActive(false);
             continueButton.gameObject.SetActive(true);
-            scoreText.transform.parent.gameObject.SetActive(false);
-            scoreMaxText.transform.parent.gameObject.SetActive(false);
-
         }
+
+        scoreText.text = score.ToString();
+
+        if (score > highScoreController.highScore) // Persist new high score
+        {
+            highScoreText.text = score.ToString();
+            highScoreController.SetNewHighScore(score);
+            infoText.transform.parent.gameObject.SetActive(true); // Inform user of new high score
+        }
+
         pauseController.PauseGame();
     }
 
@@ -118,15 +125,18 @@ public class LevelController : MonoBehaviour
 
     public void IncrementScore()
     {
-        Score++;
+        score++;
     }
 
     public void Restart()
     {
-        Score = 0;
+        score = 0;
 
         mainCharacterController.Restart();
         platformSpawnController.Restart();
+        infoText.transform.parent.gameObject.SetActive(false);
+
+        highScoreController.ReadHighScore();
 
         m_allow_pause = true;
 
