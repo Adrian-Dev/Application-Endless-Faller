@@ -13,7 +13,7 @@ public class MovingPlatform : MonoBehaviour
 
     void FixedUpdate()
     {
-        transform.Translate(Vector3.up * platformSpawnController.speed * Time.deltaTime);
+        transform.Translate(Vector3.up * platformSpawnController.Speed * Time.deltaTime);
     }
 
     private void OnTriggerEnter(Collider other)

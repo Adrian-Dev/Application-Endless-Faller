@@ -9,10 +9,14 @@ public class PlatformSpawnController : MonoBehaviour
     [SerializeField] Material platformHighScoreMaterial;
     [SerializeField] Vector3 initialPosition;
 
-    [SerializeField] public float speed { get; private set; }
+    [SerializeField] float speed;
 
-    [Tooltip("The higher it is, the quicker platforms will spawn and move")]
-    [SerializeField] float spawnRate = 5f;
+    public float Speed
+    {
+        get { return speed; }
+    }
+
+    [SerializeField] SpawnRateController spawnRateController;
 
     private float initialSpeed;
 
@@ -29,7 +33,6 @@ public class PlatformSpawnController : MonoBehaviour
     {
         random = new System.Random(); //Chooses a random seed by default. This makes sure every playthrough is almost unique
 
-        speed = 1f;
         initialSpeed = speed;
         lastIndex = -1;
 
@@ -47,7 +50,7 @@ public class PlatformSpawnController : MonoBehaviour
 
         if (timeElapsed > timeNext) // TODO Increase spawn rate and speed of platforms
         {
-            timeNext += 1f / spawnRate;
+            timeNext += 1f / spawnRateController.SpawnRate;
             speed += 0.01f;
         }
     }
@@ -81,7 +84,7 @@ public class PlatformSpawnController : MonoBehaviour
         count = 0;
         speed = initialSpeed;
         timeElapsed = 0f;
-        timeNext = spawnRate;
+        timeNext = 1f / spawnRateController.SpawnRate;
         lastIndex = -1;
 
         foreach (MovingPlatform platform in FindObjectsOfType<MovingPlatform>())
