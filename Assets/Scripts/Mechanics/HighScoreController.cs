@@ -10,19 +10,22 @@ public class HighScoreController : MonoBehaviour
 
     private void Awake()
     {
+        highScore = 0;
         ReadHighScore();
     }
 
     public void ReadHighScore()
-    {        
-        //TODO read actual value 
-        highScore = 2;
+    {
+        HighScoreData highScoreData = SaveSystem.LoadHighScore(this);
+
+        highScore = highScoreData.highScore;
         highScoreText.text = highScore.ToString();
     }
 
     public void SetNewHighScore(int newHighScore)
     {
-        //Persist value to disk
+        highScore = newHighScore;
+        SaveSystem.SaveHighScore(this);
     }
 
 }
