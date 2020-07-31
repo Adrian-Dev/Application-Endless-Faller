@@ -11,13 +11,17 @@ public class GameManager : MonoBehaviour
 
     public void Play()
     {
-        StartCoroutine(LoadScene(gameScene));
+        SceneManager.LoadScene(gameScene);
+
+        //StartCoroutine(LoadScene(gameScene));
     }
 
+    //TODO Check not working after trying to load when coming from the Game scene
     private IEnumerator LoadScene(string sceneName)
     {
         Debug.Log("Loading scene named: '" + sceneName + "'");
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(1.5f);
+        //SceneManager.LoadScene(gameScene);
         EditorSceneManager.LoadScene(sceneName);
     }
 }
