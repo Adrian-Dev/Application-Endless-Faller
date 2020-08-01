@@ -22,9 +22,9 @@ public class MenuController : MonoBehaviour
         levelController.Restart();
     }
 
-    public void ReturnHome()
+    public void GoToScene(string sceneName)
     {
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(sceneName);
     }
 
     public void Quit()
