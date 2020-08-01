@@ -3,10 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Handles the high score in the application
+/// </summary>
 public class HighScoreController : MonoBehaviour
 {
+    [Tooltip("Refence to high score in the UI")]
     [SerializeField] Text highScoreText;
-    [SerializeField] public int highScore { get; private set; }
+
+    int highScore;
+
+    public int HighScore
+    {
+        get { return highScore; }
+    }
 
     private void Awake()
     {

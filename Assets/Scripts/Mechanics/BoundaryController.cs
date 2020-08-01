@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Handles what to do when either when the player or any platform reach the boundary of the level
+/// This is being used to implement what happens when these elements are out of the screen.
+/// </summary>
 public class BoundaryController : MonoBehaviour
 {
     LevelController levelController;

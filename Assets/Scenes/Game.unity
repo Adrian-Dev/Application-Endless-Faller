@@ -1455,12 +1455,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92946f074adae7f49b40468acbde35a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fadeImage: {fileID: 281675762}
   continueButton: {fileID: 1618687774}
   restartButton: {fileID: 885756423}
   scoreText: {fileID: 2052352239}
   highScoreText: {fileID: 1487048405}
   infoText: {fileID: 393581655}
+  fadeImage: {fileID: 281675762}
 --- !u!4 &956302407
 Transform:
   m_ObjectHideFlags: 0
@@ -1812,7 +1812,7 @@ GameObject:
   - component: {fileID: 1241122465}
   - component: {fileID: 1241122464}
   m_Layer: 0
-  m_Name: ScoreController
+  m_Name: HighScoreController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Platform spawn rate settings
+/// </summary>
 [CreateAssetMenu(fileName = "Spawn Rate Config", menuName = "Spawn Platform/Spawn Rate", order = 1)]
 public class SpawnRateController : ScriptableObject
 {

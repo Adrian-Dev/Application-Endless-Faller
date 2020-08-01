@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+/// <summary>
+/// Class served as an interface for the Menu and the application game flow controller
+/// </summary>
 public class MenuController : MonoBehaviour
 {
     LevelController levelController;

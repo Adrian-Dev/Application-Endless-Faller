@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// Platform logic
+/// </summary>
 public class MovingPlatform : MonoBehaviour
 {
     LevelController levelController;
@@ -11,7 +14,7 @@ public class MovingPlatform : MonoBehaviour
         platformSpawnController = FindObjectOfType<PlatformSpawnController>();
     }
 
-    void FixedUpdate()
+    void Update()
     {
         transform.Translate(Vector3.up * platformSpawnController.Speed * Time.deltaTime);
     }

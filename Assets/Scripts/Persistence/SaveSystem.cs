@@ -2,6 +2,9 @@
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
+/// <summary>
+/// Loading and saving utility
+/// </summary>
 public static class SaveSystem
 {
     private static string path = Application.persistentDataPath + "/highScore.bin";
