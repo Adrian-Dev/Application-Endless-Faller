@@ -3,8 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Handles current UI elements
+/// </summary>
 public class ScoreUIController : MonoBehaviour
 {
+    [Tooltip("Reference to players score UI element")]
     [SerializeField] Text textCurrentScore;
 
     LevelController levelController;
@@ -15,6 +19,6 @@ public class ScoreUIController : MonoBehaviour
 
     void Update()
     {
-        textCurrentScore.text = levelController.score.ToString(); //TODO think of a more efficient way of doing this instead of using Update. Maybe delegates in LevelManager?
+        textCurrentScore.text = levelController.score.ToString();
     }
 }

@@ -3,14 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Controls the game flow and application state
+/// </summary>
 public class LevelController : MonoBehaviour
 {
-    [SerializeField] Image fadeImage;
+    [Header("References to Menu elements")]
     [SerializeField] Button continueButton;
     [SerializeField] Button restartButton;
     [SerializeField] Text scoreText;
     [SerializeField] Text highScoreText;
     [SerializeField] Text infoText;
+
+    [Header("Reference to Fade Image element")]
+    [SerializeField] Image fadeImage;
 
     public int score { get; private set; }
 
@@ -109,7 +115,7 @@ public class LevelController : MonoBehaviour
 
         scoreText.text = score.ToString();
 
-        if (score > highScoreController.highScore) // Persist new high score
+        if (score > highScoreController.HighScore) // Persist new high score
         {
             highScoreText.text = score.ToString();
             highScoreController.SetNewHighScore(score);

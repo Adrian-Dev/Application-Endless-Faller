@@ -2,8 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Player Controller
+/// </summary>
 public class MainCharacterController : MonoBehaviour
 {
+    [Tooltip("Movement speed")]
     [SerializeField] private float speed;
 
     Vector3 initialTransform;
@@ -13,7 +17,7 @@ public class MainCharacterController : MonoBehaviour
         initialTransform = transform.position;
     }
 
-    void FixedUpdate()
+    void Update()
     {
         ProcessInput();
     }

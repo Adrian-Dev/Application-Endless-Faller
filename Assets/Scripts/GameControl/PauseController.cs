@@ -2,8 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Handles the pause and resume events in the application
+/// </summary>
 public class PauseController : MonoBehaviour
 {
+    [Header("References to main app objects")]
     [SerializeField] GameObject world;
     [SerializeField] GameObject menu;
     [SerializeField] GameObject UI;

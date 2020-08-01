@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Spawns the next platform whenever a platform hits this gameObjects trigger collider.
+/// This implementation makes keeping a constant distance between platforms 
+/// </summary>
 public class NextPlatformController : MonoBehaviour
 {
     PlatformSpawnController platformSpawnController;

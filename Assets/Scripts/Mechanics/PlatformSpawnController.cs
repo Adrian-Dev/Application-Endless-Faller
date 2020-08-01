@@ -2,22 +2,34 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Spawning platform system
+/// </summary>
 public class PlatformSpawnController : MonoBehaviour
 {
-    [SerializeField] List<GameObject> platformList;
-    [SerializeField] GameObject parentPlatforms;
-    [SerializeField] Material platformHighScoreMaterial;
-    [SerializeField] Vector3 initialPosition;
-
+    [Header("Settings")]
     [Tooltip("Initial platforms speed")]
     [SerializeField] float speed;
+    [Tooltip("Initial spawning position in the scene")]
+    [SerializeField] Vector3 initialPosition;
+    [Tooltip("Parent object where platforms will be childed to")]
+    [SerializeField] GameObject parentPlatforms;
+
+    [Header("Asset references")]
+
+    [Tooltip("Reference to asset material when player will surpass current high score")]
+    [SerializeField] Material platformHighScoreMaterial;
+    [Tooltip("Reference to asset platforms to be spawned")]
+    [SerializeField] List<GameObject> platformList;
+
+
+    [Header("Asset Spawn Rate Config")]
+    [SerializeField] SpawnRateController spawnRateController;
 
     public float Speed
     {
         get { return speed; }
     }
-
-    [SerializeField] SpawnRateController spawnRateController;
 
     private float initialSpeed;
 
@@ -49,10 +61,10 @@ public class PlatformSpawnController : MonoBehaviour
     {
         timeElapsed += Time.deltaTime;
 
-        if (timeElapsed > timeNext) // TODO Increase spawn rate and speed of platforms
+        if (timeElapsed > timeNext)
         {
             timeNext += 1f / spawnRateController.SpawnRate;
-            speed += 0.01f;
+            speed += 0.01f; // Increase speed platforms speed
         }
     }
 
@@ -68,7 +80,7 @@ public class PlatformSpawnController : MonoBehaviour
         GameObject platform = Instantiate(platformList[index], initialPosition, Quaternion.identity);
         platform.transform.parent = parentPlatforms.transform;
 
-        if(count == highScoreController.highScore) // About to surpass highScore
+        if(count == highScoreController.HighScore) // About to surpass highScore
         {
             foreach(MeshRenderer meshRenderer in platform.GetComponentsInChildren<MeshRenderer>())
             {
