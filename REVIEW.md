@@ -5,9 +5,9 @@
 ### Summary
 Overall I have a good feeling about the game play and I am satisfied with the project architecture design, following a decoupled, modular guideline. I did not spend so much time in the core game, gameplay mechanics or visual effects, but rather in designing and figuring out how to implement some side functionality (scriptable object, persistence, modular and proper architecture, pause menu). I had to refactor a little bit the initial code I had proposed to make it work as I wanted to.
 
-The only remaining thing to be completed from the requirements list is the ‘Automated test’. It would probably take me some time to prepare as I am not yet experienced with this, so I prefered to actually submit the current solution as the final release, and then do some research on my own.
+The only remaining thing to be completed from the requirements list is the ‘Automated test’. It would probably take me some time to prepare as I am not yet experienced with this, so I prefered to actually submit the current solution as the final release, and then do some research on my own. The application has been tested by doing iterative playtesting.
 
-This project proves that architecture, design patterns, best practices and automated tests are still some concepts I need to improve, and this is one of the main reasons why I want to join an experienced team familiar with these ideas.
+This project proves that architecture, design patterns, applying solid principles, best practices and automated tests are still some concepts I need to improve, and this is one of the main reasons why I want to join an experienced team familiar with these ideas.
 
 ### Requirements subtasks 
 
@@ -43,7 +43,7 @@ This project proves that architecture, design patterns, best practices and autom
    - [x] When I press escape, the game should pause, and I should have a menu with the option "Continue" and "Go back to main menu". The buttons should either continue the game or take the user back to the home scene. 
    - [x] _When restarting the game, don't reload the scene._ 
    - _Time taken: about two hours and a half and three hours_  
-      -  Also needed more time than estimated here (30m - 1h), since I made a mayor change on the architecture to let it be as decoupled as possible, preparing the game glow, pause option, restart option, etc. At least I think it is a decent job.
+      -  Also needed more time than estimated here (30m - 1h), since I made a mayor change on the architecture to let it be as decoupled as possible, preparing the game flow, pause option, restart option, etc. At least I think it is a decent job.
       - I used the same pause menu logic I implemented in [BullyYard](https://github.com/mostachostudios/TJ_game/) project.
       - **Note**: ‘Esc’ Key is a reserved key in Editor mode, so I used ‘M’ instead for developing,  but ‘Esc’ will work on build.
       - Changed 'Reset' for 'Restart' in LevelManager, since 'Reset' is a reserved function in Unity
@@ -74,6 +74,6 @@ Some side notes:
 
 - Main character made some jittering when colliding with walls and platforms instead of snapping to them, but it seemed to be partially solved after playing with some rigidbody and speed parameters. 
 
-- Testing the game with several parameter values to make it fun (player speed, spawn rate, speed to be increases, etc)
+- Testing the game with several parameter values to make it fun (player speed, spawn rate, speed to be increased, etc)
 
 - Payed attention in having a good hierarchy structure in the scene
