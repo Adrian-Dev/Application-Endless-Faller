@@ -12,9 +12,14 @@ public class MainCharacterController : MonoBehaviour
 
     Vector3 initialTransform;
 
+    ParticleSystem explosionParticleSystem;
+    Rigidbody rbody;
+
     private void Awake()
     {
         initialTransform = transform.position;
+        explosionParticleSystem = GetComponent<ParticleSystem>();
+        rbody = GetComponent<Rigidbody>();
     }
 
     void Update()
@@ -36,12 +41,12 @@ public class MainCharacterController : MonoBehaviour
 
     public void Explosion()
     {
-        GetComponent<ParticleSystem>().Play();
+        explosionParticleSystem.Play();
     }
 
     public void Restart()
     {
         transform.position = initialTransform;
-        GetComponent<Rigidbody>().velocity = new Vector3(0f, 0f, 0f); // Restore velocity, otherwise will continue with current falling speed by gravity
+        rbody.velocity = new Vector3(0f, 0f, 0f); // Restore velocity, otherwise will continue with current falling speed by gravity
     }
 }

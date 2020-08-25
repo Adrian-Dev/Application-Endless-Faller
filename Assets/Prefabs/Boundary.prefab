@@ -12,11 +12,11 @@ GameObject:
   - component: {fileID: 566839728888385183}
   - component: {fileID: 566839728888385180}
   - component: {fileID: 566839728888385181}
-  - component: {fileID: 566839728888385177}
   - component: {fileID: 877237048731987113}
+  - component: {fileID: 566839728888385177}
   m_Layer: 0
   m_Name: Boundary
-  m_TagString: Untagged
+  m_TagString: Boundary
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -95,18 +95,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &566839728888385177
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 566839728888385170}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 28a05220587f7954693925513190a0af, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!54 &877237048731987113
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -123,3 +111,15 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &566839728888385177
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 566839728888385170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28a05220587f7954693925513190a0af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

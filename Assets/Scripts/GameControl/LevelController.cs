@@ -27,14 +27,14 @@ public class LevelController : MonoBehaviour
     private bool isGameLost;
 
     MainCharacterController mainCharacterController;
-    PlatformSpawnController platformSpawnController;
+    ActivePlatformsController activePlatformsController;
     HighScoreController highScoreController;
 
     private void Awake()
     {
         pauseController = GetComponent<PauseController>();
         mainCharacterController = FindObjectOfType<MainCharacterController>();
-        platformSpawnController = FindObjectOfType<PlatformSpawnController>();
+        activePlatformsController = FindObjectOfType<ActivePlatformsController>();
         highScoreController = FindObjectOfType<HighScoreController>();
     }
 
@@ -149,7 +149,7 @@ public class LevelController : MonoBehaviour
         score = 0;
 
         mainCharacterController.Restart();
-        platformSpawnController.Restart();
+        activePlatformsController.Restart();
         infoText.transform.parent.gameObject.SetActive(false);
 
         highScoreController.ReadHighScore();

@@ -6,17 +6,17 @@
 public class MovingPlatform : MonoBehaviour
 {
     LevelController levelController;
-    PlatformSpawnController platformSpawnController;
+    ActivePlatformsController activePlatformsController;
 
     private void Awake()
     {
         levelController = FindObjectOfType<LevelController>();
-        platformSpawnController = FindObjectOfType<PlatformSpawnController>();
+        activePlatformsController = FindObjectOfType<ActivePlatformsController>();
     }
 
     void Update()
     {
-        transform.Translate(Vector3.up * platformSpawnController.Speed * Time.deltaTime);
+        transform.Translate(Vector3.up * activePlatformsController.Speed * Time.deltaTime);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -24,6 +24,10 @@ public class MovingPlatform : MonoBehaviour
         if (other.tag.Equals("Player"))
         {
             levelController.IncrementScore();
+        }
+        else if (other.tag.Equals("Boundary"))
+        {
+            activePlatformsController.ReleasePlatform(gameObject);
         }
     }
 }
