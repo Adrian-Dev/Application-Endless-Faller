@@ -1212,11 +1212,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: BoundaryUp
       objectReference: {fileID: 0}
-    - target: {fileID: 566839728888385180, guid: 0c1f467af23928349ab3671b5dbb2b79,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 566839728888385182, guid: 0c1f467af23928349ab3671b5dbb2b79,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2880,7 +2875,7 @@ GameObject:
   - component: {fileID: 1992097853}
   - component: {fileID: 1992097852}
   m_Layer: 0
-  m_Name: PlatformSpawnController
+  m_Name: ActivePlatformsController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2898,22 +2893,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6568bd7d0dc37b74184a187b2ff6423c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  platformList:
-  - {fileID: 1367811301945011629, guid: 2b321147b35d46a4ea93e65b0c94e43f, type: 3}
-  - {fileID: 1367811301945011629, guid: 7a00e724889cc5a4fa05a7fa0c779877, type: 3}
-  - {fileID: 1367811301945011629, guid: bb080a283115cc0479b216d17bafe749, type: 3}
-  - {fileID: 1367811301945011629, guid: 47b74080eea0a3f41bdc5017277a87c5, type: 3}
-  - {fileID: 1367811301945011629, guid: ff0e1c6bda8b37f489564c5d5bdc3bf5, type: 3}
-  - {fileID: 1367811301945011629, guid: 2d00c30a21a81be43a00913bb51bdffb, type: 3}
-  - {fileID: 1367811301945011629, guid: dec70d385c96ed44a8eb2a914946c647, type: 3}
-  - {fileID: 1367811301945011629, guid: 759ff966a0539004fa1431fead194299, type: 3}
-  - {fileID: 1367811301945011629, guid: 71e52fd9cc0c0fb43967a2f602b29cad, type: 3}
-  - {fileID: 1367811301945011629, guid: 2bed8c06a1f03cd4a93ba469f3b90c8a, type: 3}
+  speed: 1
+  initialPosition: {x: 0, y: -6.4, z: 0}
   parentPlatforms: {fileID: 567096576}
   platformHighScoreMaterial: {fileID: 2100000, guid: 9dad24aaa04b2d647bc8da1cdb7ce8ea,
     type: 2}
-  initialPosition: {x: 0, y: -6.4, z: 0}
-  speed: 1
+  platformDefaultMaterial: {fileID: 2100000, guid: 31ceaf4ebbc2e86429d6ffef78db6463,
+    type: 2}
   spawnRateController: {fileID: 11400000, guid: c9ae6537d032dc542972a911fc4bf464,
     type: 2}
 --- !u!4 &1992097853

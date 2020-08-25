@@ -10,6 +10,7 @@ public class BoundaryController : MonoBehaviour
 {
     LevelController levelController;
     MainCharacterController mainCharacterController;
+
     private void Awake()
     {
         levelController = FindObjectOfType<LevelController>();
@@ -20,18 +21,14 @@ public class BoundaryController : MonoBehaviour
     {
         if (other.tag.Equals("Player"))
         {
+            levelController.SetGameLost();
+            mainCharacterController.Explosion();
             StartCoroutine(LoseGame());
-        }
-        else if (other.tag.Equals("MovingPlatform"))
-        {
-            Destroy(other.transform.parent.gameObject);
         }
     }
 
     IEnumerator LoseGame()
     {
-        levelController.SetGameLost();
-        mainCharacterController.Explosion();
         yield return new WaitForSeconds(0.5f);
         levelController.AllowPauseGame(false);
         levelController.PauseGame(true);
