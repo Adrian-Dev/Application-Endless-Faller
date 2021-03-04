@@ -6,18 +6,18 @@
 /// </summary>
 public class NextPlatformTrigger : MonoBehaviour
 {
-    ActivePlatformsController _activePlatformsController;
+    PlatformsController _platformsController;
 
-    public void InjectDependencies(ActivePlatformsController activePlatformsController)
+    public void InjectDependencies(PlatformsController platformsController)
     {
-        _activePlatformsController = activePlatformsController;
+        _platformsController = platformsController;
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag.Equals("MovingPlatform"))
         {
-            _activePlatformsController.SpawnPlatform();
+            _platformsController.SpawnPlatform();
         }
     }
 }

@@ -7,12 +7,12 @@ using UnityEngine;
 /// </summary>
 public static class SaveSystem
 {
-    private static string path = Application.persistentDataPath + "/highScore.bin";
+    private static string _path = Application.persistentDataPath + "/highScore.bin";
 
     public static void SaveHighScore(HighScoreController highScoreController)
     {
         BinaryFormatter formatter = new BinaryFormatter();
-        FileStream stream = new FileStream(path, FileMode.Create);
+        FileStream stream = new FileStream(_path, FileMode.Create);
 
         HighScoreData highScoreData = new HighScoreData(highScoreController);
 
@@ -22,15 +22,15 @@ public static class SaveSystem
 
     public static HighScoreData LoadHighScore(HighScoreController highScoreController)
     {
-        if (!File.Exists(path))
+        if (!File.Exists(_path))
         {
-            Debug.Log("File " + path + " not found. Creating it");
+            Debug.Log("File " + _path + " not found. Creating it");
 
             SaveHighScore(highScoreController);
         }
 
         BinaryFormatter formatter = new BinaryFormatter();
-        FileStream stream = new FileStream(path, FileMode.Open);
+        FileStream stream = new FileStream(_path, FileMode.Open);
 
         HighScoreData highScoreData = formatter.Deserialize(stream) as HighScoreData;
         stream.Close();

@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// Spawning platform system
 /// </summary>
-public class ActivePlatformsController : MonoBehaviour // TODO rename to PlatformsController
+public class PlatformsController : MonoBehaviour
 {
     [Header("Settings")]
     [Tooltip("Initial platforms speed")]
@@ -13,14 +13,13 @@ public class ActivePlatformsController : MonoBehaviour // TODO rename to Platfor
     [Tooltip("Initial spawning platform position in the scene")]
     [SerializeField] Transform _initialPosition;
 
-
     [Header("Asset references")]
     [Tooltip("Reference to asset material when player will surpass current high score")]
     [SerializeField] Material _platformHighScoreMaterial;
     [Tooltip("Reference to default asset material")]
     [SerializeField] Material _platformDefaultMaterial;
 
-    PoolMovingPlatformController _poolMovingPlatformController;
+    PoolPlatformController _poolPlatformController;
     SpawnRateController _spawnRateController;
     HighScoreController _highScoreController;
 
@@ -34,9 +33,10 @@ public class ActivePlatformsController : MonoBehaviour // TODO rename to Platfor
     private float _timeElapsed;
     private int _currentHighScore;
     private int _count;
-    public void InjectDependencies(PoolMovingPlatformController poolMovingPlatformController, SpawnRateController spawnRateController, HighScoreController highScoreController)
+
+    public void InjectDependencies(PoolPlatformController poolPlatformController, SpawnRateController spawnRateController, HighScoreController highScoreController)
     {
-        _poolMovingPlatformController = poolMovingPlatformController;
+        _poolPlatformController = poolPlatformController;
         _spawnRateController = spawnRateController;
         _highScoreController = highScoreController;
     }
@@ -52,7 +52,6 @@ public class ActivePlatformsController : MonoBehaviour // TODO rename to Platfor
 
         if (_timeElapsed > _timeNext)
         {
-           // _timeNext += 1f / _spawnRateController.SpawnRate;
             _timeElapsed = 0f;
             _speed += 0.01f; // Increase platforms speed
         }
@@ -60,7 +59,7 @@ public class ActivePlatformsController : MonoBehaviour // TODO rename to Platfor
 
     public void SpawnPlatform()
     {
-        MovingPlatform platform = _poolMovingPlatformController.GetRandomPlatform();
+        MovingPlatform platform = _poolPlatformController.GetRandomPlatform();
         ResetPlatform(platform);
 
         if (_count == _currentHighScore) // About to surpass current high score
@@ -73,7 +72,7 @@ public class ActivePlatformsController : MonoBehaviour // TODO rename to Platfor
 
     public void ReleasePlatform(MovingPlatform platform)
     {
-        _poolMovingPlatformController.ReleasePlatform(platform);
+        _poolPlatformController.ReleasePlatform(platform);
     }
 
     public void Initialize()
@@ -85,7 +84,7 @@ public class ActivePlatformsController : MonoBehaviour // TODO rename to Platfor
 
         _currentHighScore = _highScoreController.HighScore;
 
-        _poolMovingPlatformController.ReleaseAllPlatforms();
+        _poolPlatformController.ReleaseAllPlatforms();
 
         SpawnPlatform();
     }

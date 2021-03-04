@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PoolMovingPlatformController : ScriptableObject
+public class PoolPlatformController : ScriptableObject
 {
     private System.Random _random;
 
-    private List<MovingPlatform> _poolMovingPlatformList;
+    private List<MovingPlatform> _poolPlatformList;
     private List<int> _platformsAvailable;
     private Dictionary<MovingPlatform, int> _platformsIndexes;
 
@@ -14,14 +14,14 @@ public class PoolMovingPlatformController : ScriptableObject
     {
         _random = new System.Random(); //Chooses a random seed by default. This makes sure every playthrough is almost unique
        
-        _poolMovingPlatformList = movingPlatformList;
+        _poolPlatformList = movingPlatformList;
 
-        _platformsAvailable = new List<int>(_poolMovingPlatformList.Count);
-        _platformsIndexes = new Dictionary<MovingPlatform, int>(_poolMovingPlatformList.Count);
+        _platformsAvailable = new List<int>(_poolPlatformList.Count);
+        _platformsIndexes = new Dictionary<MovingPlatform, int>(_poolPlatformList.Count);
 
-        for (int i = 0; i < _poolMovingPlatformList.Count; ++i)
+        for (int i = 0; i < _poolPlatformList.Count; ++i)
         {
-            MovingPlatform platform = _poolMovingPlatformList[i];
+            MovingPlatform platform = _poolPlatformList[i];
             _platformsIndexes.Add(platform, i);
             _platformsAvailable.Add(i);
         }
@@ -29,7 +29,7 @@ public class PoolMovingPlatformController : ScriptableObject
 
     public MovingPlatform GetRandomPlatform()
     {
-        if (!(_platformsAvailable.Count > 0))
+        if (_platformsAvailable.Count <= 0)
         {
             return null;
         }
@@ -40,7 +40,7 @@ public class PoolMovingPlatformController : ScriptableObject
         _platformsAvailable[index] = _platformsAvailable[_platformsAvailable.Count - 1]; // Swap with last index element
         _platformsAvailable.RemoveAt(_platformsAvailable.Count - 1); // Remove then las index element (this operation is O(1))
 
-        MovingPlatform movingPlatform = _poolMovingPlatformList[indexPlatform];
+        MovingPlatform movingPlatform = _poolPlatformList[indexPlatform];
         movingPlatform.gameObject.SetActive(true);
 
         return movingPlatform;
@@ -60,9 +60,9 @@ public class PoolMovingPlatformController : ScriptableObject
     {
         _platformsAvailable.Clear();
 
-        for (int i = 0; i < _poolMovingPlatformList.Count; ++i)
+        for (int i = 0; i < _poolPlatformList.Count; ++i)
         {
-            _poolMovingPlatformList[i].gameObject.SetActive(false);
+            _poolPlatformList[i].gameObject.SetActive(false);
             _platformsAvailable.Add(i);
         }
     }

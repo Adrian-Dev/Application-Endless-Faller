@@ -11,16 +11,16 @@ public class HighScoreController : MonoBehaviour
     [Tooltip("Refence to high score in the UI")]
     [SerializeField] Text highScoreText;
 
-    int highScore;
+    int _highScore;
 
     public int HighScore
     {
-        get { return highScore; }
+        get { return _highScore; }
     }
 
     private void Awake()
     {
-        highScore = 0;
+        _highScore = 0;
         ReadHighScore();
     }
 
@@ -28,13 +28,13 @@ public class HighScoreController : MonoBehaviour
     {
         HighScoreData highScoreData = SaveSystem.LoadHighScore(this);
 
-        highScore = highScoreData.highScore;
-        highScoreText.text = highScore.ToString();
+        _highScore = highScoreData.highScore;
+        highScoreText.text = _highScore.ToString();
     }
 
     public void SetNewHighScore(int newHighScore)
     {
-        highScore = newHighScore;
+        _highScore = newHighScore;
         SaveSystem.SaveHighScore(this);
     }
 

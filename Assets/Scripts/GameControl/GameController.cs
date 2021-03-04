@@ -1,22 +1,20 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEditor;
-using UnityEditor.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
-    [SerializeField] private string gameScene;
-
-    public void Play()
+    public void GoToScene(string sceneName)
     {
-        StartCoroutine(LoadScene(gameScene));
+        SceneManager.LoadScene(sceneName);
     }
 
-    private IEnumerator LoadScene(string sceneName)
+    public void Quit()
     {
-        Debug.Log("Loading game!");
-        yield return new WaitForSeconds(14);
-        EditorSceneManager.LoadScene(sceneName);
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
     }
 }

@@ -11,9 +11,6 @@ public class LevelController : MonoBehaviour
     [Tooltip("Parent object where platforms will be childed to")]
     [SerializeField] Transform _parentPlatforms;
 
-    [Header("Asset Spawn Rate Config")]
-    [SerializeField] SpawnRateController _spawnRateController;
-
     [Header("References to Menu elements")]
     [SerializeField] Button continueButton;
     [SerializeField] Button restartButton;
@@ -24,50 +21,53 @@ public class LevelController : MonoBehaviour
     [Header("Reference to Fade Image element")]
     [SerializeField] Image fadeImage;
 
-    public int Score { get { return score; } }
-    int score;
-
-    private bool paused; // switch values for showing menu (game is paused) and closing menu (game is playing) 
-    private bool m_allow_pause;
-
-    private bool isGameLost;
-
     [Header("Reference to Depencies to be Injected")]
-    [SerializeField] PauseController _pauseController;
-    [SerializeField] MainCharacterController _mainCharacterController;
-    [SerializeField] HighScoreController _highScoreController;
-    [SerializeField] ActivePlatformsController _activePlatformsController;
-    [SerializeField] NextPlatformTrigger _nextPlatformTrigger;
     [SerializeField] BoundaryController _boundaryControllerUp;
     [SerializeField] BoundaryController _boundaryControllerDown;
+    [SerializeField] NextPlatformTrigger _nextPlatformTrigger;
+    [SerializeField] PlatformsController _platformsController;
+    [SerializeField] MainCharacterController _mainCharacterController;
+    [SerializeField] HighScoreController _highScoreController;
 
-    PoolMovingPlatformController _poolMovingPlatformController;
+    [SerializeField] PauseController _pauseController;
 
+    [Header("Asset Spawn Rate Config")]
+    [SerializeField] SpawnRateController _spawnRateController;
+
+    PoolPlatformController _poolPlatformController;
     List<MovingPlatform> _movingPlatformList;
+
+    public int Score { get { return _score; } }
+    int _score;
+
+    private bool _paused; // switch values for showing menu (game is paused) and closing menu (game is playing) 
+    private bool _m_allow_pause;
+
+    private bool _isGameLost;
 
     private void Awake()
     {
         _movingPlatformList = new List<MovingPlatform>();
-
         LoadPlatformsFromPrefab(_movingPlatformList);
 
-        _poolMovingPlatformController = ScriptableObject.CreateInstance<PoolMovingPlatformController>();
-        _poolMovingPlatformController.InjectDependencies(_movingPlatformList);
+        _poolPlatformController = ScriptableObject.CreateInstance<PoolPlatformController>();
+        _poolPlatformController.InjectDependencies(_movingPlatformList);
 
-        _activePlatformsController.InjectDependencies(_poolMovingPlatformController, _spawnRateController, _highScoreController);
-        _nextPlatformTrigger.InjectDependencies(_activePlatformsController);
         _boundaryControllerUp.InjectDependencies(this, _mainCharacterController);
         _boundaryControllerDown.InjectDependencies(this, _mainCharacterController);
+        _nextPlatformTrigger.InjectDependencies(_platformsController);
+        _platformsController.InjectDependencies(_poolPlatformController, _spawnRateController, _highScoreController);
+
     }
 
     void Start()
     {
-        Initialize();
+        RestartGame();
     }
 
     void Update()
     {
-        if (m_allow_pause)
+        if (_m_allow_pause)
         {
             KeyCode pauseMenuKey;
 #if UNITY_EDITOR
@@ -77,7 +77,7 @@ public class LevelController : MonoBehaviour
 #endif
             if (Input.GetKeyUp(pauseMenuKey))
             {
-                paused = !paused;
+                _paused = !_paused;
                 SetPauseResume();
             }
         }
@@ -93,9 +93,9 @@ public class LevelController : MonoBehaviour
 
     }
 
-    void SetPauseResume() // TODO move pause and resume to Game/Menu class
+    void SetPauseResume()
     {
-        if (paused)
+        if (_paused)
         {
             PauseGame();
         }
@@ -126,12 +126,12 @@ public class LevelController : MonoBehaviour
     /// </summary>
     public void AllowPauseGame(bool value)
     {
-        m_allow_pause = value;
+        _m_allow_pause = value;
     }
 
     public void PauseGame(bool gameLost = false)
     {
-        paused = true;
+        _paused = true;
         if (gameLost)
         {
             restartButton.gameObject.SetActive(true);
@@ -143,53 +143,55 @@ public class LevelController : MonoBehaviour
             continueButton.gameObject.SetActive(true);
         }
 
-        scoreText.text = score.ToString();
+        scoreText.text = _score.ToString();
 
-        if (score > _highScoreController.HighScore) // Persist new high score
+        if (_score > _highScoreController.HighScore) // Persist new high score
         {
-            highScoreText.text = score.ToString();
-            _highScoreController.SetNewHighScore(score);
+            highScoreText.text = _score.ToString();
+            _highScoreController.SetNewHighScore(_score);
             infoText.transform.parent.gameObject.SetActive(true); // Inform user of new high score
         }
 
         _pauseController.PauseGame();
     }
 
-    public void ResumeGame()
+    public void ResumeGame() // Also meant to be wired in Scene with CONTINUE button
     {
-        paused = false;
+        _paused = false;
         _pauseController.ResumeGame();
+    }
+
+    public void RestartGame() // Also meant to be wired in Scene with RESTART button
+    {
+        Initialize();
+        FadeOff();
+        ResumeGame();
     }
 
     public void IncrementScore()
     {
-        if (!isGameLost) // Prevents increasing score if player already lost but the game is still running
+        if (!_isGameLost) // Prevents increasing score if player already lost but the game is still running
         {
-            score++;
+            _score++;
         }
     }
 
     public void SetGameLost()
     {
-        isGameLost = true;
+        _isGameLost = true;
     }
 
     public void Initialize()
     {
-        score = 0;
+        _m_allow_pause = true;
+        _isGameLost = false;
+        _score = 0;
 
         _mainCharacterController.Initialize();
-        _activePlatformsController.Initialize();
-        infoText.transform.parent.gameObject.SetActive(false);
+        _platformsController.Initialize();
+        infoText.transform.parent.gameObject.SetActive(false); // work around to get a better solution rather than doing this in this line
 
         _highScoreController.ReadHighScore();
-
-        m_allow_pause = true;
-
-        isGameLost = false;
-
-        FadeOff();
-        ResumeGame();
     }
 
 
@@ -200,7 +202,7 @@ public class LevelController : MonoBehaviour
         for (int i = 0; i < prefabsPoolPlatformList.Count; ++i)
         {
             MovingPlatform platform = Instantiate(prefabsPoolPlatformList[i]);
-            platform.InjectDependencies(this, _activePlatformsController);
+            platform.InjectDependencies(this, _platformsController);
             platform.transform.parent = _parentPlatforms;
             platform.gameObject.SetActive(false);
 

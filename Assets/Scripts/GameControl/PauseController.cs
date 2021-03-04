@@ -8,28 +8,28 @@ using UnityEngine;
 public class PauseController : MonoBehaviour
 {
     [Header("References to main app objects")]
-    [SerializeField] GameObject world;
-    [SerializeField] GameObject menu;
-    [SerializeField] GameObject UI;
+    [SerializeField] GameObject _world;
+    [SerializeField] GameObject _menu;
+    [SerializeField] GameObject _UI;
 
-    private List<MonoBehaviour> worldMonoBehaviours;
-    private List<AudioSource> audioSources;
+    private List<MonoBehaviour> _worldMonoBehaviours;
+    private List<AudioSource> _audioSources;
 
     private void Awake()
     {
-        worldMonoBehaviours = new List<MonoBehaviour>();
+        _worldMonoBehaviours = new List<MonoBehaviour>();
         
-        var WorldMonoBehaviours = world.GetComponentsInChildren<MonoBehaviour>();
+        var WorldMonoBehaviours = _world.GetComponentsInChildren<MonoBehaviour>();
         foreach (var monoBehaviour in WorldMonoBehaviours)
         {
             //Ignore PostProcessLayers so they won't be deactivated
             if (!monoBehaviour.GetType().FullName.Equals("UnityEngine.Rendering.PostProcessing.PostProcessLayer"))
             {
-                worldMonoBehaviours.Add(monoBehaviour);
+                _worldMonoBehaviours.Add(monoBehaviour);
             }
         }
 
-        audioSources = new List<AudioSource>(world.GetComponentsInChildren<AudioSource>());
+        _audioSources = new List<AudioSource>(_world.GetComponentsInChildren<AudioSource>());
     }
 
     public void PauseGame()
@@ -41,8 +41,8 @@ public class PauseController : MonoBehaviour
 
         SetActiveScripts(false);
 
-        UI.SetActive(false);
-        menu.SetActive(true);
+        _UI.SetActive(false);
+        _menu.SetActive(true);
     }
 
     public void ResumeGame()
@@ -54,18 +54,18 @@ public class PauseController : MonoBehaviour
 
         SetActiveScripts(true);
 
-        UI.SetActive(true);
-        menu.SetActive(false);
+        _UI.SetActive(true);
+        _menu.SetActive(false);
     }
 
     void SetActiveScripts(bool active)
     {
-        foreach (var monoBehaviour in worldMonoBehaviours)
+        foreach (var monoBehaviour in _worldMonoBehaviours)
         {
             monoBehaviour.enabled = active;
         }
 
-        foreach (var audioSource in audioSources)
+        foreach (var audioSource in _audioSources)
         {
             if (active)
             {

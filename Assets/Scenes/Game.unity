@@ -186,7 +186,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &145976780
 GameObject:
@@ -263,6 +263,49 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 145976780}
   m_CullTransparentMesh: 0
+--- !u!1 &223613374
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 223613376}
+  - component: {fileID: 223613375}
+  m_Layer: 0
+  m_Name: GameController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &223613375
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 223613374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de51bf2b60b10c24197fc5e0a97d5631, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &223613376
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 223613374}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &280844561
 GameObject:
   m_ObjectHideFlags: 0
@@ -498,7 +541,7 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -685,7 +728,7 @@ GameObject:
   - component: {fileID: 550458120}
   - component: {fileID: 550458119}
   m_Layer: 5
-  m_Name: Text Score
+  m_Name: Text Current Score
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -789,7 +832,7 @@ Transform:
   - {fileID: 4461928245769095046}
   - {fileID: 5662799565822018481}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &567096576
 GameObject:
@@ -1082,7 +1125,7 @@ GameObject:
   - component: {fileID: 724824239}
   - component: {fileID: 724824238}
   m_Layer: 5
-  m_Name: Text Max Score
+  m_Name: Text High Score
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1388,8 +1431,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1875291401}
-        m_MethodName: Restart
+      - m_Target: {fileID: 956302406}
+        m_MethodName: RestartGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1446,7 +1489,6 @@ GameObject:
   m_Component:
   - component: {fileID: 956302407}
   - component: {fileID: 956302406}
-  - component: {fileID: 956302405}
   m_Layer: 0
   m_Name: LevelController
   m_TagString: Untagged
@@ -1454,21 +1496,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &956302405
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 956302404}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce2b805bf58cc35499aecb807047739e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  world: {fileID: 562460951}
-  menu: {fileID: 1875291399}
-  UI: {fileID: 1318888628}
 --- !u!114 &956302406
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1482,21 +1509,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _parentPlatforms: {fileID: 567096577}
-  _spawnRateController: {fileID: 11400000, guid: c9ae6537d032dc542972a911fc4bf464,
-    type: 2}
   continueButton: {fileID: 1618687774}
   restartButton: {fileID: 885756423}
   scoreText: {fileID: 2052352239}
   highScoreText: {fileID: 1487048405}
   infoText: {fileID: 393581655}
   fadeImage: {fileID: 281675762}
-  _pauseController: {fileID: 956302405}
-  _mainCharacterController: {fileID: 1496058436}
-  _highScoreController: {fileID: 1241122465}
-  _activePlatformsController: {fileID: 1992097852}
-  _nextPlatformTrigger: {fileID: 4461928245769095051}
   _boundaryControllerUp: {fileID: 686319314}
   _boundaryControllerDown: {fileID: 349750676}
+  _nextPlatformTrigger: {fileID: 4461928245769095051}
+  _platformsController: {fileID: 1992097852}
+  _mainCharacterController: {fileID: 1496058436}
+  _highScoreController: {fileID: 1241122465}
+  _pauseController: {fileID: 1439952020}
+  _spawnRateController: {fileID: 11400000, guid: c9ae6537d032dc542972a911fc4bf464,
+    type: 2}
 --- !u!4 &956302407
 Transform:
   m_ObjectHideFlags: 0
@@ -1509,7 +1536,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &974937592
 GameObject:
@@ -1538,7 +1565,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 974937592}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -8.19, z: 0}
+  m_LocalPosition: {x: 0, y: -8.62, z: 0}
   m_LocalScale: {x: 12, y: 1, z: 4}
   m_Children: []
   m_Father: {fileID: 1644885669}
@@ -1616,7 +1643,7 @@ GameObject:
   - component: {fileID: 990719923}
   - component: {fileID: 990719922}
   m_Layer: 5
-  m_Name: Score
+  m_Name: Current Score
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1692,7 +1719,7 @@ GameObject:
   - component: {fileID: 1117554697}
   - component: {fileID: 1117554696}
   m_Layer: 5
-  m_Name: Text Score
+  m_Name: Text Current Score
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1770,7 +1797,7 @@ GameObject:
   - component: {fileID: 1139797787}
   - component: {fileID: 1139797786}
   m_Layer: 5
-  m_Name: Text Score Value
+  m_Name: Text Current Score Value
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1866,7 +1893,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1241122464
 MonoBehaviour:
@@ -1976,7 +2003,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1875291401}
+      - m_Target: {fileID: 223613375}
         m_MethodName: GoToScene
         m_Mode: 5
         m_Arguments:
@@ -2053,7 +2080,7 @@ Transform:
   m_Children:
   - {fileID: 2023062620}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1321882240
 GameObject:
@@ -2137,7 +2164,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1875291401}
+      - m_Target: {fileID: 223613375}
         m_MethodName: Quit
         m_Mode: 1
         m_Arguments:
@@ -2277,6 +2304,52 @@ Transform:
   m_Father: {fileID: 562460952}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 45.7, y: -49.202003, z: 29.718002}
+--- !u!1 &1439952019
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1439952021}
+  - component: {fileID: 1439952020}
+  m_Layer: 0
+  m_Name: PauseController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1439952020
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1439952019}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce2b805bf58cc35499aecb807047739e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _world: {fileID: 562460951}
+  _menu: {fileID: 1875291399}
+  _UI: {fileID: 1318888628}
+--- !u!4 &1439952021
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1439952019}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1464315015
 GameObject:
   m_ObjectHideFlags: 0
@@ -2382,7 +2455,7 @@ GameObject:
   - component: {fileID: 1487048406}
   - component: {fileID: 1487048405}
   m_Layer: 5
-  m_Name: Text Max Score Value
+  m_Name: Text High Score Value
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2698,8 +2771,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1875291401}
-        m_MethodName: Resume
+      - m_Target: {fileID: 956302406}
+        m_MethodName: ResumeGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2867,7 +2940,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1875291400}
-  - component: {fileID: 1875291401}
   - component: {fileID: 1875291402}
   m_Layer: 11
   m_Name: Menu
@@ -2889,20 +2961,8 @@ Transform:
   m_Children:
   - {fileID: 280844562}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1875291401
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1875291399}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f148fd1b12486bd40b03f97045e35538, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1875291402
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2932,7 +2992,7 @@ GameObject:
   - component: {fileID: 1951936893}
   - component: {fileID: 1951936892}
   m_Layer: 5
-  m_Name: Score Max
+  m_Name: High Score
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3043,7 +3103,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2023062616
 GameObject:
@@ -3156,7 +3216,7 @@ GameObject:
   - component: {fileID: 2052352240}
   - component: {fileID: 2052352239}
   m_Layer: 5
-  m_Name: Text Score Value
+  m_Name: Text Current Score Value
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3326,7 +3386,7 @@ GameObject:
   - component: {fileID: 2096140193}
   - component: {fileID: 2096140192}
   m_Layer: 5
-  m_Name: Score
+  m_Name: 'Current Score '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3402,6 +3462,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: BoundaryDown
       objectReference: {fileID: 0}
+    - target: {fileID: 566839728888385180, guid: 0c1f467af23928349ab3671b5dbb2b79,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 566839728888385182, guid: 0c1f467af23928349ab3671b5dbb2b79,
         type: 3}
       propertyPath: m_RootOrder
@@ -3415,7 +3480,7 @@ PrefabInstance:
     - target: {fileID: 566839728888385182, guid: 0c1f467af23928349ab3671b5dbb2b79,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -7.6
+      value: -7.99
       objectReference: {fileID: 0}
     - target: {fileID: 566839728888385182, guid: 0c1f467af23928349ab3671b5dbb2b79,
         type: 3}
