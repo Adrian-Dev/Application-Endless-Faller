@@ -5,29 +5,42 @@
 /// </summary>
 public class MovingPlatform : MonoBehaviour
 {
-    LevelController levelController;
-    ActivePlatformsController activePlatformsController;
+    LevelController _levelController;
+    ActivePlatformsController _activePlatformsController;
 
-    private void Awake()
+    public void InjectDependencies(LevelController levelController, ActivePlatformsController activePlatformsController)
     {
-        levelController = FindObjectOfType<LevelController>();
-        activePlatformsController = FindObjectOfType<ActivePlatformsController>();
+        _levelController = levelController;
+        _activePlatformsController = activePlatformsController;
     }
 
     void Update()
     {
-        transform.Translate(Vector3.up * activePlatformsController.Speed * Time.deltaTime);
+        MoveUp();
+    }
+
+    void MoveUp()
+    {
+        transform.Translate(Vector3.up * _activePlatformsController.Speed * Time.deltaTime);
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag.Equals("Player"))
         {
-            levelController.IncrementScore();
+            _levelController.IncrementScore();
         }
         else if (other.tag.Equals("Boundary"))
         {
-            activePlatformsController.ReleasePlatform(gameObject);
+            _activePlatformsController.ReleasePlatform(this); // Probably not the best place to do this, as the object should not be concerned about creating and releasing/destroying itself (its life cycle)
+        }
+    }
+
+    public void ChangeMaterial(Material material)
+    {
+        foreach (MeshRenderer meshRenderer in GetComponentsInChildren<MeshRenderer>())
+        {
+            meshRenderer.material = material;
         }
     }
 }

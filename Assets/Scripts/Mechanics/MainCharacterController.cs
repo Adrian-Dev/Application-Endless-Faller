@@ -8,45 +8,46 @@ using UnityEngine;
 public class MainCharacterController : MonoBehaviour
 {
     [Tooltip("Movement speed")]
-    [SerializeField] private float speed;
+    [SerializeField] float _speed;
 
-    Vector3 initialTransform;
-
-    ParticleSystem explosionParticleSystem;
-    Rigidbody rbody;
+    Vector3 _initialTransform;
+    ParticleSystem _explosionParticleSystem;
+    Rigidbody _rbody;
 
     private void Awake()
     {
-        initialTransform = transform.position;
-        explosionParticleSystem = GetComponent<ParticleSystem>();
-        rbody = GetComponent<Rigidbody>();
+        _initialTransform = transform.position;
+        _explosionParticleSystem = GetComponent<ParticleSystem>();
+        _rbody = GetComponent<Rigidbody>();
+    }
+    public void Initialize()
+    {
+        transform.position = _initialTransform;
+        _rbody.velocity = new Vector3(0f, 0f, 0f); // Restore velocity, otherwise will continue with current falling speed by gravity
     }
 
-    void Update()
+    public void MoveLeft()
     {
-        ProcessInput();
+        transform.Translate(Vector3.left * _speed * Time.deltaTime);
     }
 
-    void ProcessInput()
+    public void MoveRight()
     {
-        if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
-        {
-            transform.Translate(Vector3.left * speed * Time.deltaTime);
-        }
-        else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
-        {
-            transform.Translate(Vector3.right * speed * Time.deltaTime);
-        }
+        transform.Translate(Vector3.right * _speed * Time.deltaTime);
     }
 
-    public void Explosion()
+    public void MoveUp()
     {
-        explosionParticleSystem.Play();
+        transform.Translate(Vector3.up * _speed * Time.deltaTime);
     }
 
-    public void Restart()
+    public void MoveDown()
     {
-        transform.position = initialTransform;
-        rbody.velocity = new Vector3(0f, 0f, 0f); // Restore velocity, otherwise will continue with current falling speed by gravity
+        transform.Translate(Vector3.down * _speed * Time.deltaTime);
+    }
+
+    public void Explode()
+    {
+        _explosionParticleSystem.Play();
     }
 }

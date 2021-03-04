@@ -8,30 +8,30 @@ using UnityEngine;
 /// </summary>
 public class BoundaryController : MonoBehaviour
 {
-    LevelController levelController;
-    MainCharacterController mainCharacterController;
+    LevelController _levelController;
+    MainCharacterController _mainCharacterController;
 
-    private void Awake()
+    public void InjectDependencies(LevelController levelController, MainCharacterController mainCharacterController)
     {
-        levelController = FindObjectOfType<LevelController>();
-        mainCharacterController = FindObjectOfType<MainCharacterController>();
+        _levelController = levelController;
+        _mainCharacterController = mainCharacterController;
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag.Equals("Player"))
         {
-            levelController.SetGameLost();
-            mainCharacterController.Explosion();
             StartCoroutine(LoseGame());
         }
     }
 
     IEnumerator LoseGame()
     {
+        _levelController.SetGameLost();
+        _mainCharacterController.Explode();
         yield return new WaitForSeconds(0.5f);
-        levelController.AllowPauseGame(false);
-        levelController.PauseGame(true);
+        _levelController.AllowPauseGame(false);
+        _levelController.PauseGame(true);
         yield return null;
     }
 }

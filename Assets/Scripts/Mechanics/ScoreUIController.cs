@@ -19,6 +19,6 @@ public class ScoreUIController : MonoBehaviour
 
     void Update()
     {
-        textCurrentScore.text = levelController.score.ToString();
+        textCurrentScore.text = levelController.Score.ToString();
     }
 }

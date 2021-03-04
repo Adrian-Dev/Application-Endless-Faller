@@ -2,22 +2,22 @@
 
 /// <summary>
 /// Spawns the next platform whenever a platform hits this gameObjects trigger collider.
-/// This implementation makes keeping a constant distance between platforms 
+/// This implementation makes platforms keep a constant distance between them 
 /// </summary>
 public class NextPlatformTrigger : MonoBehaviour
 {
-    ActivePlatformsController activePlatformsController;
+    ActivePlatformsController _activePlatformsController;
 
-    private void Awake()
+    public void InjectDependencies(ActivePlatformsController activePlatformsController)
     {
-        activePlatformsController = FindObjectOfType<ActivePlatformsController>();
+        _activePlatformsController = activePlatformsController;
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag.Equals("MovingPlatform"))
         {
-            activePlatformsController.SpawnPlatform();
+            _activePlatformsController.SpawnPlatform();
         }
     }
 }

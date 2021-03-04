@@ -8,6 +8,12 @@ using UnityEngine.UI;
 /// </summary>
 public class LevelController : MonoBehaviour
 {
+    [Tooltip("Parent object where platforms will be childed to")]
+    [SerializeField] Transform _parentPlatforms;
+
+    [Header("Asset Spawn Rate Config")]
+    [SerializeField] SpawnRateController _spawnRateController;
+
     [Header("References to Menu elements")]
     [SerializeField] Button continueButton;
     [SerializeField] Button restartButton;
@@ -18,52 +24,76 @@ public class LevelController : MonoBehaviour
     [Header("Reference to Fade Image element")]
     [SerializeField] Image fadeImage;
 
-    public int score { get; private set; }
+    public int Score { get { return score; } }
+    int score;
 
-    PauseController pauseController;
     private bool paused; // switch values for showing menu (game is paused) and closing menu (game is playing) 
     private bool m_allow_pause;
 
     private bool isGameLost;
 
-    MainCharacterController mainCharacterController;
-    ActivePlatformsController activePlatformsController;
-    HighScoreController highScoreController;
+    [Header("Reference to Depencies to be Injected")]
+    [SerializeField] PauseController _pauseController;
+    [SerializeField] MainCharacterController _mainCharacterController;
+    [SerializeField] HighScoreController _highScoreController;
+    [SerializeField] ActivePlatformsController _activePlatformsController;
+    [SerializeField] NextPlatformTrigger _nextPlatformTrigger;
+    [SerializeField] BoundaryController _boundaryControllerUp;
+    [SerializeField] BoundaryController _boundaryControllerDown;
+
+    PoolMovingPlatformController _poolMovingPlatformController;
+
+    List<MovingPlatform> _movingPlatformList;
 
     private void Awake()
     {
-        pauseController = GetComponent<PauseController>();
-        mainCharacterController = FindObjectOfType<MainCharacterController>();
-        activePlatformsController = FindObjectOfType<ActivePlatformsController>();
-        highScoreController = FindObjectOfType<HighScoreController>();
+        _movingPlatformList = new List<MovingPlatform>();
+
+        LoadPlatformsFromPrefab(_movingPlatformList);
+
+        _poolMovingPlatformController = ScriptableObject.CreateInstance<PoolMovingPlatformController>();
+        _poolMovingPlatformController.InjectDependencies(_movingPlatformList);
+
+        _activePlatformsController.InjectDependencies(_poolMovingPlatformController, _spawnRateController, _highScoreController);
+        _nextPlatformTrigger.InjectDependencies(_activePlatformsController);
+        _boundaryControllerUp.InjectDependencies(this, _mainCharacterController);
+        _boundaryControllerDown.InjectDependencies(this, _mainCharacterController);
     }
 
     void Start()
     {
-        Restart();
+        Initialize();
     }
 
     void Update()
     {
         if (m_allow_pause)
         {
-
             KeyCode pauseMenuKey;
 #if UNITY_EDITOR
             pauseMenuKey = KeyCode.M;
 #else
-        pauseMenuKey = KeyCode.Escape;
+            pauseMenuKey = KeyCode.Escape;
 #endif
-
             if (Input.GetKeyUp(pauseMenuKey))
             {
                 paused = !paused;
                 SetPauseResume();
             }
         }
+
+        if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
+        {
+            _mainCharacterController.MoveLeft();
+        }
+        else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
+        {
+            _mainCharacterController.MoveRight();
+        }
+
     }
 
-    void SetPauseResume()
+    void SetPauseResume() // TODO move pause and resume to Game/Menu class
     {
         if (paused)
         {
@@ -115,25 +145,25 @@ public class LevelController : MonoBehaviour
 
         scoreText.text = score.ToString();
 
-        if (score > highScoreController.HighScore) // Persist new high score
+        if (score > _highScoreController.HighScore) // Persist new high score
         {
             highScoreText.text = score.ToString();
-            highScoreController.SetNewHighScore(score);
+            _highScoreController.SetNewHighScore(score);
             infoText.transform.parent.gameObject.SetActive(true); // Inform user of new high score
         }
 
-        pauseController.PauseGame();
+        _pauseController.PauseGame();
     }
 
     public void ResumeGame()
     {
         paused = false;
-        pauseController.ResumeGame();
+        _pauseController.ResumeGame();
     }
 
     public void IncrementScore()
     {
-        if (!isGameLost) // Prevents increasing score if player already lose but the game is still running
+        if (!isGameLost) // Prevents increasing score if player already lost but the game is still running
         {
             score++;
         }
@@ -144,15 +174,15 @@ public class LevelController : MonoBehaviour
         isGameLost = true;
     }
 
-    public void Restart()
+    public void Initialize()
     {
         score = 0;
 
-        mainCharacterController.Restart();
-        activePlatformsController.Restart();
+        _mainCharacterController.Initialize();
+        _activePlatformsController.Initialize();
         infoText.transform.parent.gameObject.SetActive(false);
 
-        highScoreController.ReadHighScore();
+        _highScoreController.ReadHighScore();
 
         m_allow_pause = true;
 
@@ -160,5 +190,21 @@ public class LevelController : MonoBehaviour
 
         FadeOff();
         ResumeGame();
+    }
+
+
+    void LoadPlatformsFromPrefab(List<MovingPlatform> movingPlatformList)
+    {
+        List<MovingPlatform> prefabsPoolPlatformList = new List<MovingPlatform>(Resources.LoadAll<MovingPlatform>("Platforms"));
+
+        for (int i = 0; i < prefabsPoolPlatformList.Count; ++i)
+        {
+            MovingPlatform platform = Instantiate(prefabsPoolPlatformList[i]);
+            platform.InjectDependencies(this, _activePlatformsController);
+            platform.transform.parent = _parentPlatforms;
+            platform.gameObject.SetActive(false);
+
+            movingPlatformList.Add(platform);
+        }
     }
 }

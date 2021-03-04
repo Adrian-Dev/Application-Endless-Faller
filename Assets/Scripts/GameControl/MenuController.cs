@@ -22,7 +22,7 @@ public class MenuController : MonoBehaviour
 
     public void Restart()
     {
-        levelController.Restart();
+        levelController.Initialize();
     }
 
     public void GoToScene(string sceneName)
