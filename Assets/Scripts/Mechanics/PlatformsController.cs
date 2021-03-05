@@ -10,8 +10,6 @@ public class PlatformsController : MonoBehaviour
     [Header("Settings")]
     [Tooltip("Initial platforms speed")]
     [SerializeField] float _speed;
-    [Tooltip("Initial spawning platform position in the scene")]
-    [SerializeField] Transform _initialPosition;
 
     [Header("Asset references")]
     [Tooltip("Reference to asset material when player will surpass current high score")]
@@ -19,8 +17,8 @@ public class PlatformsController : MonoBehaviour
     [Tooltip("Reference to default asset material")]
     [SerializeField] Material _platformDefaultMaterial;
 
+    Transform _initialPosition;
     PoolPlatformController _poolPlatformController;
-    SpawnRateController _spawnRateController;
     HighScoreController _highScoreController;
 
     public float Speed
@@ -29,15 +27,13 @@ public class PlatformsController : MonoBehaviour
     }
 
     private float _initialSpeed;
-    private float _timeNext;
-    private float _timeElapsed;
     private int _currentHighScore;
     private int _count;
 
-    public void InjectDependencies(PoolPlatformController poolPlatformController, SpawnRateController spawnRateController, HighScoreController highScoreController)
+    public void InjectDependencies(Transform initialPosition, PoolPlatformController poolPlatformController, HighScoreController highScoreController)
     {
+        _initialPosition = initialPosition; 
         _poolPlatformController = poolPlatformController;
-        _spawnRateController = spawnRateController;
         _highScoreController = highScoreController;
     }
 
@@ -46,15 +42,9 @@ public class PlatformsController : MonoBehaviour
         _initialSpeed = _speed;
     }
 
-    void Update()
+    public void IncreasePlatformsSpeed(float speed)
     {
-        _timeElapsed += Time.deltaTime;
-
-        if (_timeElapsed > _timeNext)
-        {
-            _timeElapsed = 0f;
-            _speed += 0.01f; // Increase platforms speed
-        }
+        _speed += speed;
     }
 
     public void SpawnPlatform()
@@ -79,8 +69,6 @@ public class PlatformsController : MonoBehaviour
     {
         _count = 0;
         _speed = _initialSpeed;
-        _timeElapsed = 0f;
-        _timeNext = 1f / _spawnRateController.SpawnRate;
 
         _currentHighScore = _highScoreController.HighScore;
 

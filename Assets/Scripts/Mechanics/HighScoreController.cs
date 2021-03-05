@@ -14,11 +14,6 @@ public class HighScoreController : MonoBehaviour
         get { return _highScore; }
     }
 
-    void Awake()
-    {
-        LoadCurrentHighScore();
-    }
-
     public void LoadCurrentHighScore()
     {
         HighScoreData highScoreData = SaveSystem.LoadHighScore(this);

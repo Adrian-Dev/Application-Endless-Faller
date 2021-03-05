@@ -14,7 +14,7 @@ public class MainCharacterController : MonoBehaviour
     ParticleSystem _explosionParticleSystem;
     Rigidbody _rbody;
 
-    private void Awake()
+    void Awake()
     {
         _initialTransform = transform.position;
         _explosionParticleSystem = GetComponent<ParticleSystem>();

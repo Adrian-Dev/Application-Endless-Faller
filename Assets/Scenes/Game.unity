@@ -186,7 +186,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &145976780
 GameObject:
@@ -541,7 +541,7 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -832,7 +832,7 @@ Transform:
   - {fileID: 4461928245769095046}
   - {fileID: 5662799565822018481}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &567096576
 GameObject:
@@ -1508,13 +1508,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92946f074adae7f49b40468acbde35a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _world: {fileID: 562460951}
+  _menu: {fileID: 1875291399}
+  _UI: {fileID: 1318888628}
+  _initialPlatformPosition: {fileID: 1700797035}
   _parentPlatforms: {fileID: 567096577}
-  continueButton: {fileID: 1618687774}
-  restartButton: {fileID: 885756423}
-  scoreText: {fileID: 2052352239}
-  highScoreText: {fileID: 1487048405}
-  infoText: {fileID: 393581655}
-  textCurrentScore: {fileID: 1139797786}
+  _continueButton: {fileID: 1618687774}
+  _restartButton: {fileID: 885756423}
+  _currentScoreTextMenu: {fileID: 2052352239}
+  _highScoreTextMenu: {fileID: 1487048405}
+  _infoTextMenu: {fileID: 393581655}
+  _currentScoreTextUI: {fileID: 1139797786}
   fadeImage: {fileID: 281675762}
   _boundaryControllerUp: {fileID: 686319314}
   _boundaryControllerDown: {fileID: 349750676}
@@ -1522,7 +1526,6 @@ MonoBehaviour:
   _platformsController: {fileID: 1992097852}
   _mainCharacterController: {fileID: 1496058436}
   _highScoreController: {fileID: 1241122465}
-  _pauseController: {fileID: 1439952020}
   _spawnRateController: {fileID: 11400000, guid: c9ae6537d032dc542972a911fc4bf464,
     type: 2}
 --- !u!4 &956302407
@@ -1893,7 +1896,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1241122465
 MonoBehaviour:
@@ -1907,7 +1910,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0019f5925fc16754fb409d8c203dfd17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highScoreText: {fileID: 1487048405}
 --- !u!1 &1261679170
 GameObject:
   m_ObjectHideFlags: 0
@@ -2067,7 +2069,7 @@ Transform:
   m_Children:
   - {fileID: 2023062620}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1321882240
 GameObject:
@@ -2291,52 +2293,6 @@ Transform:
   m_Father: {fileID: 562460952}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 45.7, y: -49.202003, z: 29.718002}
---- !u!1 &1439952019
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1439952021}
-  - component: {fileID: 1439952020}
-  m_Layer: 0
-  m_Name: PauseController
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1439952020
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1439952019}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce2b805bf58cc35499aecb807047739e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _world: {fileID: 562460951}
-  _menu: {fileID: 1875291399}
-  _UI: {fileID: 1318888628}
---- !u!4 &1439952021
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1439952019}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1464315015
 GameObject:
   m_ObjectHideFlags: 0
@@ -2948,7 +2904,7 @@ Transform:
   m_Children:
   - {fileID: 280844562}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1875291402
 MonoBehaviour:
@@ -3073,7 +3029,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _speed: 1
-  _initialPosition: {fileID: 1700797035}
   _platformHighScoreMaterial: {fileID: 2100000, guid: 9dad24aaa04b2d647bc8da1cdb7ce8ea,
     type: 2}
   _platformDefaultMaterial: {fileID: 2100000, guid: 31ceaf4ebbc2e86429d6ffef78db6463,
@@ -3090,7 +3045,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2023062616
 GameObject:

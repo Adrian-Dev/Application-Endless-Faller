@@ -5,20 +5,23 @@ using UnityEngine;
 /// <summary>
 /// Handles the pause and resume events in the application
 /// </summary>
-public class PauseController : MonoBehaviour
+public class PauseController 
 {
-    [Header("References to main app objects")]
-    [SerializeField] GameObject _world;
-    [SerializeField] GameObject _menu;
-    [SerializeField] GameObject _UI;
+    GameObject _world;
+    GameObject _menu;
+    GameObject _UI;
 
     private List<MonoBehaviour> _worldMonoBehaviours;
     private List<AudioSource> _audioSources;
 
-    private void Awake()
+    public void InjectDependencies(GameObject world, GameObject menu, GameObject UI)
     {
+        _world = world;
+        _menu = menu;
+        _UI = UI;
+
         _worldMonoBehaviours = new List<MonoBehaviour>();
-        
+
         var WorldMonoBehaviours = _world.GetComponentsInChildren<MonoBehaviour>();
         foreach (var monoBehaviour in WorldMonoBehaviours)
         {

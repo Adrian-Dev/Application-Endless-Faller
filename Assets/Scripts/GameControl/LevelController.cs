@@ -8,19 +8,28 @@ using UnityEngine.UI;
 /// </summary>
 public class LevelController : MonoBehaviour
 {
+    [Header("References to inject on pause controller")]
+    [SerializeField] GameObject _world;
+    [SerializeField] GameObject _menu;
+    [SerializeField] GameObject _UI;
+
+    [Header("Platforms settings")]
+    [Tooltip("Initial spawning platform position in the scene")]
+    [SerializeField] Transform _initialPlatformPosition;
     [Tooltip("Parent object where platforms will be childed to")]
     [SerializeField] Transform _parentPlatforms;
 
     [Header("References to Menu elements")]
-    [SerializeField] Button continueButton;
-    [SerializeField] Button restartButton;
-    [SerializeField] Text scoreText;
+    [SerializeField] Button _continueButton;
+    [SerializeField] Button _restartButton;
+    [SerializeField] Text _currentScoreTextMenu;
     [Tooltip("Refence to high score in the Menu UI")]
-    [SerializeField] Text highScoreText;
-    [SerializeField] Text infoText;
-    [Tooltip("Reference to players score UI element")]
-    [SerializeField] Text textCurrentScore;
+    [SerializeField] Text _highScoreTextMenu;
+    [SerializeField] Text _infoTextMenu;
 
+    [Header("References to UI elements")]
+    [Tooltip("Reference to players score UI element")]
+    [SerializeField] Text _currentScoreTextUI;
 
     [Header("Reference to Fade Image element")]
     [SerializeField] Image fadeImage;
@@ -33,10 +42,10 @@ public class LevelController : MonoBehaviour
     [SerializeField] MainCharacterController _mainCharacterController;
     [SerializeField] HighScoreController _highScoreController;
 
-    [SerializeField] PauseController _pauseController;
-
     [Header("Asset Spawn Rate Config")]
     [SerializeField] SpawnRateController _spawnRateController;
+
+    PauseController _pauseController;
 
     PoolPlatformController _poolPlatformController;
     List<MovingPlatform> _movingPlatformList;
@@ -49,10 +58,18 @@ public class LevelController : MonoBehaviour
 
     private bool _isGameLost;
 
+    private float _timeNextPlatform;
+    private float _timeElapsed;
+
     private void Awake()
     {
+        // Entry point - Composition Root
+
         _movingPlatformList = new List<MovingPlatform>();
         LoadPlatformsFromPrefab(_movingPlatformList);
+
+        _pauseController = new PauseController();
+        _pauseController.InjectDependencies(_world, _menu, _UI);
 
         _poolPlatformController = ScriptableObject.CreateInstance<PoolPlatformController>();
         _poolPlatformController.InjectDependencies(_movingPlatformList);
@@ -60,8 +77,7 @@ public class LevelController : MonoBehaviour
         _boundaryControllerUp.InjectDependencies(this, _mainCharacterController);
         _boundaryControllerDown.InjectDependencies(this, _mainCharacterController);
         _nextPlatformTrigger.InjectDependencies(_platformsController);
-        _platformsController.InjectDependencies(_poolPlatformController, _spawnRateController, _highScoreController);
-
+        _platformsController.InjectDependencies(_initialPlatformPosition, _poolPlatformController, _highScoreController);
     }
 
     void Start()
@@ -95,7 +111,15 @@ public class LevelController : MonoBehaviour
             _mainCharacterController.MoveRight();
         }
 
-        textCurrentScore.text = Score.ToString();
+        _currentScoreTextUI.text = Score.ToString();
+
+
+        _timeElapsed += Time.deltaTime;
+        if (_timeElapsed > _timeNextPlatform)
+        {
+            _timeElapsed = 0f;
+            _platformsController.IncreasePlatformsSpeed(0.01f);
+        }
     }
 
     void SetPauseResume()
@@ -139,24 +163,23 @@ public class LevelController : MonoBehaviour
         _paused = true;
         if (gameLost)
         {
-            restartButton.gameObject.SetActive(true);
-            continueButton.gameObject.SetActive(false);
+            _restartButton.gameObject.SetActive(true);
+            _continueButton.gameObject.SetActive(false);
         }
         else
         {
-            restartButton.gameObject.SetActive(false);
-            continueButton.gameObject.SetActive(true);
+            _restartButton.gameObject.SetActive(false);
+            _continueButton.gameObject.SetActive(true);
         }
 
-        scoreText.text = _score.ToString();
+        _currentScoreTextMenu.text = _score.ToString();
 
         if (_score > _highScoreController.HighScore) // Persist new high score
         {
-//            highScoreText.text = _score.ToString();
             _highScoreController.SetNewHighScore(_score);
-            _highScoreController.WriteHighScoreOnText(highScoreText);
+            _highScoreController.WriteHighScoreOnText(_highScoreTextMenu);
 
-            infoText.transform.parent.gameObject.SetActive(true); // Inform user of new high score
+            _infoTextMenu.transform.parent.gameObject.SetActive(true); // Inform user of new high score
         }
 
         _pauseController.PauseGame();
@@ -194,12 +217,15 @@ public class LevelController : MonoBehaviour
         _isGameLost = false;
         _score = 0;
 
+        _timeElapsed = 0f;
+        _timeNextPlatform = 1f / _spawnRateController.SpawnRate;
+
         _mainCharacterController.Initialize();
         _platformsController.Initialize();
-        infoText.transform.parent.gameObject.SetActive(false); // work around to get a better solution rather than doing this in this line
+        _infoTextMenu.transform.parent.gameObject.SetActive(false); // work around to get a better solution rather than doing this in this line
 
         _highScoreController.LoadCurrentHighScore();
-        _highScoreController.WriteHighScoreOnText(highScoreText);
+        _highScoreController.WriteHighScoreOnText(_highScoreTextMenu);
     }
 
 
