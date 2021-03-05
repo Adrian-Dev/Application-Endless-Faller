@@ -8,28 +8,21 @@ using UnityEngine.UI;
 /// </summary>
 public class HighScoreController : MonoBehaviour
 {
-    [Tooltip("Refence to high score in the UI")]
-    [SerializeField] Text highScoreText;
-
     int _highScore;
-
     public int HighScore
     {
         get { return _highScore; }
     }
 
-    private void Awake()
+    void Awake()
     {
-        _highScore = 0;
-        ReadHighScore();
+        LoadCurrentHighScore();
     }
 
-    public void ReadHighScore()
+    public void LoadCurrentHighScore()
     {
         HighScoreData highScoreData = SaveSystem.LoadHighScore(this);
-
         _highScore = highScoreData.highScore;
-        highScoreText.text = _highScore.ToString();
     }
 
     public void SetNewHighScore(int newHighScore)
@@ -38,4 +31,8 @@ public class HighScoreController : MonoBehaviour
         SaveSystem.SaveHighScore(this);
     }
 
+    public void WriteHighScoreOnText(Text highScoreText)
+    {
+        highScoreText.text = _highScore.ToString();
+    }
 }

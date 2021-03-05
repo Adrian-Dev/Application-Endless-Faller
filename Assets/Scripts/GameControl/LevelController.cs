@@ -15,8 +15,12 @@ public class LevelController : MonoBehaviour
     [SerializeField] Button continueButton;
     [SerializeField] Button restartButton;
     [SerializeField] Text scoreText;
+    [Tooltip("Refence to high score in the Menu UI")]
     [SerializeField] Text highScoreText;
     [SerializeField] Text infoText;
+    [Tooltip("Reference to players score UI element")]
+    [SerializeField] Text textCurrentScore;
+
 
     [Header("Reference to Fade Image element")]
     [SerializeField] Image fadeImage;
@@ -91,6 +95,7 @@ public class LevelController : MonoBehaviour
             _mainCharacterController.MoveRight();
         }
 
+        textCurrentScore.text = Score.ToString();
     }
 
     void SetPauseResume()
@@ -147,8 +152,10 @@ public class LevelController : MonoBehaviour
 
         if (_score > _highScoreController.HighScore) // Persist new high score
         {
-            highScoreText.text = _score.ToString();
+//            highScoreText.text = _score.ToString();
             _highScoreController.SetNewHighScore(_score);
+            _highScoreController.WriteHighScoreOnText(highScoreText);
+
             infoText.transform.parent.gameObject.SetActive(true); // Inform user of new high score
         }
 
@@ -191,7 +198,8 @@ public class LevelController : MonoBehaviour
         _platformsController.Initialize();
         infoText.transform.parent.gameObject.SetActive(false); // work around to get a better solution rather than doing this in this line
 
-        _highScoreController.ReadHighScore();
+        _highScoreController.LoadCurrentHighScore();
+        _highScoreController.WriteHighScoreOnText(highScoreText);
     }
 
 
