@@ -14,6 +14,8 @@ public class LevelController : MonoBehaviour
     [SerializeField] GameObject _UI;
 
     [Header("Platforms settings")]
+    [Tooltip("Initial platforms speed")]
+    [SerializeField] float _speed;
     [Tooltip("Initial spawning platform position in the scene")]
     [SerializeField] Transform _initialPlatformPosition;
     [Tooltip("Parent object where platforms will be childed to")]
@@ -53,6 +55,12 @@ public class LevelController : MonoBehaviour
     public int Score { get { return _score; } }
     int _score;
 
+    public float PlatformsSpeed
+    {
+        get { return _speed; }
+    }
+    private float _initialSpeed;
+
     private bool _paused; // switch values for showing menu (game is paused) and closing menu (game is playing) 
     private bool _m_allow_pause;
 
@@ -61,7 +69,7 @@ public class LevelController : MonoBehaviour
     private float _timeNextPlatform;
     private float _timeElapsed;
 
-    private void Awake()
+    void Awake()
     {
         // Entry point - Composition Root
 
@@ -82,6 +90,8 @@ public class LevelController : MonoBehaviour
 
     void Start()
     {
+        _initialSpeed = _speed;
+
         RestartGame();
     }
 
@@ -102,24 +112,35 @@ public class LevelController : MonoBehaviour
             }
         }
 
-        if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
+        if (!_paused)
         {
-            _mainCharacterController.MoveLeft();
-        }
-        else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
-        {
-            _mainCharacterController.MoveRight();
+            if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
+            {
+                _mainCharacterController.MoveLeft();
+            }
+            else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
+            {
+                _mainCharacterController.MoveRight();
+            }
+
+            foreach (MovingPlatform platform in _movingPlatformList) // Refer to notes about optimization vs use of patterns
+            {
+                if (platform.gameObject.activeSelf)
+                {
+                    platform.MoveUp();
+                }
+            }
+
+            _timeElapsed += Time.deltaTime;
+            if (_timeElapsed > _timeNextPlatform)
+            {
+                _timeElapsed = 0f;
+                IncreasePlatformsSpeed(0.01f);
+            }
+
+            _currentScoreTextUI.text = Score.ToString();
         }
 
-        _currentScoreTextUI.text = Score.ToString();
-
-
-        _timeElapsed += Time.deltaTime;
-        if (_timeElapsed > _timeNextPlatform)
-        {
-            _timeElapsed = 0f;
-            _platformsController.IncreasePlatformsSpeed(0.01f);
-        }
     }
 
     void SetPauseResume()
@@ -206,6 +227,11 @@ public class LevelController : MonoBehaviour
         }
     }
 
+    public void IncreasePlatformsSpeed(float speed)
+    {
+        _speed += speed;
+    }
+
     public void SetGameLost()
     {
         _isGameLost = true;
@@ -216,18 +242,21 @@ public class LevelController : MonoBehaviour
         _m_allow_pause = true;
         _isGameLost = false;
         _score = 0;
+        _speed = _initialSpeed;
 
         _timeElapsed = 0f;
         _timeNextPlatform = 1f / _spawnRateController.SpawnRate;
 
-        _mainCharacterController.Initialize();
-        _platformsController.Initialize();
-        _infoTextMenu.transform.parent.gameObject.SetActive(false); // work around to get a better solution rather than doing this in this line
-
         _highScoreController.LoadCurrentHighScore();
         _highScoreController.WriteHighScoreOnText(_highScoreTextMenu);
-    }
 
+        _mainCharacterController.Initialize();
+        _platformsController.Initialize(); // platformsController dependes on HighScoreController to have been initialized to work properly. Rework this
+        _platformsController.SpawnPlatform();
+
+        _currentScoreTextUI.text = Score.ToString();
+        _infoTextMenu.transform.parent.gameObject.SetActive(false); // work around to get a better solution rather than doing this in this line
+    }
 
     void LoadPlatformsFromPrefab(List<MovingPlatform> movingPlatformList)
     {

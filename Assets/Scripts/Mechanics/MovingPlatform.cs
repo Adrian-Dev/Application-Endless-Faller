@@ -14,14 +14,9 @@ public class MovingPlatform : MonoBehaviour
         _platformsController = platformsController;
     }
 
-    void Update()
+    public void MoveUp()
     {
-        MoveUp();
-    }
-
-    void MoveUp()
-    {
-        transform.Translate(Vector3.up * _platformsController.Speed * Time.deltaTime);
+        transform.Translate(Vector3.up * _levelController.PlatformsSpeed * Time.deltaTime);
     }
 
     private void OnTriggerEnter(Collider other)

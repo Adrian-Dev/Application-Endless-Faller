@@ -7,10 +7,6 @@ using UnityEngine;
 /// </summary>
 public class PlatformsController : MonoBehaviour
 {
-    [Header("Settings")]
-    [Tooltip("Initial platforms speed")]
-    [SerializeField] float _speed;
-
     [Header("Asset references")]
     [Tooltip("Reference to asset material when player will surpass current high score")]
     [SerializeField] Material _platformHighScoreMaterial;
@@ -21,14 +17,8 @@ public class PlatformsController : MonoBehaviour
     PoolPlatformController _poolPlatformController;
     HighScoreController _highScoreController;
 
-    public float Speed
-    {
-        get { return _speed; }
-    }
-
-    private float _initialSpeed;
-    private int _currentHighScore;
     private int _count;
+    private bool _surpassed;
 
     public void InjectDependencies(Transform initialPosition, PoolPlatformController poolPlatformController, HighScoreController highScoreController)
     {
@@ -37,24 +27,15 @@ public class PlatformsController : MonoBehaviour
         _highScoreController = highScoreController;
     }
 
-    void Awake()
-    {
-        _initialSpeed = _speed;
-    }
-
-    public void IncreasePlatformsSpeed(float speed)
-    {
-        _speed += speed;
-    }
-
-    public void SpawnPlatform()
+    public void SpawnPlatform() 
     {
         MovingPlatform platform = _poolPlatformController.GetRandomPlatform();
         ResetPlatform(platform);
 
-        if (_count == _currentHighScore) // About to surpass current high score
+        if (!_surpassed && _count == _highScoreController.HighScore) // About to surpass current high score
         {
             platform.ChangeMaterial(_platformHighScoreMaterial);
+            _surpassed = true;
         }
 
         _count++;
@@ -68,13 +49,9 @@ public class PlatformsController : MonoBehaviour
     public void Initialize()
     {
         _count = 0;
-        _speed = _initialSpeed;
-
-        _currentHighScore = _highScoreController.HighScore;
+        _surpassed = false;
 
         _poolPlatformController.ReleaseAllPlatforms();
-
-        SpawnPlatform();
     }
 
     void ResetPlatform(MovingPlatform platform)

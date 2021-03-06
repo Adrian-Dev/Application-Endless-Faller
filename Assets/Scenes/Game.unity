@@ -1511,6 +1511,7 @@ MonoBehaviour:
   _world: {fileID: 562460951}
   _menu: {fileID: 1875291399}
   _UI: {fileID: 1318888628}
+  _speed: 1
   _initialPlatformPosition: {fileID: 1700797035}
   _parentPlatforms: {fileID: 567096577}
   _continueButton: {fileID: 1618687774}
