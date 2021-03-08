@@ -1,22 +1,22 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 /// <summary>
 /// Platform logic
 /// </summary>
 public class MovingPlatform : MonoBehaviour
 {
-    public bool CollidedWithPlayer;
-    public bool CollidedWitBoundary;
+    public CollidedWithTarget CollidedWithPlayer { get { return _collidedWithPlayer; } }
+    [SerializeField] CollidedWithTarget _collidedWithPlayer;
+    public CollidedWithTarget CollidedWithBoundary { get { return _collidedWithBoundary; } }
+    [SerializeField] CollidedWithTarget _collidedWithBoundary;
 
-    private void Start()
-    {
-        ResetTrigger();
-    }
+    List<Renderer> _renderers;
 
-    public void ResetTrigger()
+    private void Awake()
     {
-        CollidedWithPlayer = false;
-        CollidedWitBoundary = false;
+        _renderers = new List<Renderer>(GetComponentsInChildren<MeshRenderer>());
     }
 
     public void MoveUp(float speed)
@@ -24,23 +24,11 @@ public class MovingPlatform : MonoBehaviour
         transform.Translate(Vector3.up * speed * Time.deltaTime);
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.tag.Equals("Player"))
-        {
-            CollidedWithPlayer = true;
-        }
-        else if (other.tag.Equals("Boundary"))
-        {
-            CollidedWitBoundary = true;
-        }
-    }
-
     public void ChangeMaterial(Material material)
     {
-        foreach (MeshRenderer meshRenderer in GetComponentsInChildren<MeshRenderer>())
+        foreach (Renderer renderer in _renderers)
         {
-            meshRenderer.material = material;
+            renderer.material = material;
         }
     }
 }

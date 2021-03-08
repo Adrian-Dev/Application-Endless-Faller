@@ -9,18 +9,14 @@ public class CollidedWithTarget : MonoBehaviour
 {
     public bool Collided { get { return _collided; } }
     bool _collided;
-
+    
     public string TargetTag { get { return _targetTag; } }
-    string _targetTag; 
+    string _targetTag;
 
-    void Start()
+
+    void Awake()
     {
         ResetCollided();
-    }
-
-    public void SetTargetTag(string targetTag)
-    {
-        _targetTag = targetTag;
     }
 
     public void ResetCollided()
@@ -28,9 +24,14 @@ public class CollidedWithTarget : MonoBehaviour
         _collided = false;
     }
 
+    public void SetTargetTag(string targetTag)
+    {
+        _targetTag = targetTag;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag.Equals(TargetTag))
+        if (other.tag.Equals(_targetTag))
         {
             _collided = true;
         }

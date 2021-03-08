@@ -148,15 +148,15 @@ public class LevelController : MonoBehaviour // TODO finished tooltips properly 
                     {
                         platform.MoveUp(_speed);
 
-                        if (platform.CollidedWithPlayer)
+                        if (platform.CollidedWithPlayer.Collided)
                         {
                             IncrementScore();
-                            platform.CollidedWithPlayer = false;
+                            platform.CollidedWithPlayer.ResetCollided();
                         }
-                        if (platform.CollidedWitBoundary)
+                        if (platform.CollidedWithBoundary.Collided)
                         {
                             ReleasePlatform(platform);
-                            platform.CollidedWitBoundary = false;
+                            platform.CollidedWithBoundary.ResetCollided();
                         }
                     }
                 }
@@ -310,9 +310,11 @@ public class LevelController : MonoBehaviour // TODO finished tooltips properly 
         {
             MovingPlatform platform = Instantiate(prefabsPoolPlatformList[i]);
             platform.transform.parent = _parentPlatforms;
-            platform.gameObject.SetActive(false);
 
-            //TODO set platform TAGS
+            platform.CollidedWithPlayer.SetTargetTag("Player");
+            platform.CollidedWithBoundary.SetTargetTag("Boundary");
+
+            platform.gameObject.SetActive(false);
 
             movingPlatformList.Add(platform);
         }
