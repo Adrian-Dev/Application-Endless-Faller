@@ -10,7 +10,12 @@ public class HighScoreData
 {
     public int HighScore;
 
-    public HighScoreData(int highScore = 0)
+    public HighScoreData()
+    {
+        HighScore = 0;
+    }
+
+    public HighScoreData(int highScore)
     {
         HighScore = highScore;
     }

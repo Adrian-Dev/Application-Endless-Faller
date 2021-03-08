@@ -8,6 +8,8 @@ using UnityEngine.UI;
 /// </summary>
 public class HighScoreController : MonoBehaviour
 {
+    string fileName = "highScore.bin";
+
     int _highScore;
     public int HighScore
     {
@@ -16,14 +18,14 @@ public class HighScoreController : MonoBehaviour
 
     public void LoadCurrentHighScore()
     {
-        HighScoreData highScoreData = SaveSystem.LoadHighScore();
+        HighScoreData highScoreData = SaveSystem<HighScoreData>.Load(fileName);
         _highScore = highScoreData.HighScore;
     }
 
     public void SetNewHighScore(int newHighScore)
     {
         _highScore = newHighScore;
-        SaveSystem.SaveHighScore(new HighScoreData(_highScore));        
+        SaveSystem<HighScoreData>.Save(new HighScoreData(_highScore), fileName);
     }
 
     public void WriteHighScoreOnText(Text highScoreText)
