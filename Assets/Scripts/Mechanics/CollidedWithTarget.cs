@@ -1,10 +1,11 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 /// <summary>
-/// Spawns the next platform whenever a platform hits this gameObjects trigger collider.
-/// This implementation makes platforms keep a constant distance between them 
+/// 
 /// </summary>
-public class SpawnPlatformTrigger : MonoBehaviour
+public class CollidedWithTarget : MonoBehaviour
 {
     public bool Triggered;
     public string TagCollided;
@@ -17,7 +18,7 @@ public class SpawnPlatformTrigger : MonoBehaviour
     public void SetTag(string tag)
     {
         TagCollided = tag;
-    } 
+    }
 
     public void ResetTrigger()
     {

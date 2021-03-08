@@ -6,7 +6,7 @@ using UnityEngine.UI;
 /// <summary>
 /// Controls the game flow and application state
 /// </summary>
-public class LevelController : MonoBehaviour // TODO finished tooltips properly
+public class LevelController : MonoBehaviour // TODO finished tooltips properly and description of all scripts
 {
     [Header("References to inject on pause controller")]
     [SerializeField] GameObject _world;
@@ -37,9 +37,9 @@ public class LevelController : MonoBehaviour // TODO finished tooltips properly
     [SerializeField] Image fadeImage;
 
     [Header("Reference to Depencies")]
-    [SerializeField] BoundaryTrigger _boundaryTriggerUp;
-    [SerializeField] BoundaryTrigger _boundaryTriggerDown;
-    [SerializeField] SpawnPlatformTrigger _spawnPlatformTrigger;
+    [SerializeField] CollidedWithTarget _boundaryTriggerUp;
+    [SerializeField] CollidedWithTarget _boundaryTriggerDown;
+    [SerializeField] CollidedWithTarget _spawnPlatformTrigger;
     [SerializeField] PlatformsController _platformsController;
     [SerializeField] MainCharacterController _mainCharacterController;
     [SerializeField] HighScoreController _highScoreController;
