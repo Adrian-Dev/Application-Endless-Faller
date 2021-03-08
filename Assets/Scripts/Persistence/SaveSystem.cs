@@ -9,24 +9,22 @@ public static class SaveSystem
 {
     private static string _path = Application.persistentDataPath + "/highScore.bin";
 
-    public static void SaveHighScore(HighScoreController highScoreController)
+    public static void SaveHighScore(HighScoreData highScoreData)
     {
         BinaryFormatter formatter = new BinaryFormatter();
         FileStream stream = new FileStream(_path, FileMode.Create);
-
-        HighScoreData highScoreData = new HighScoreData(highScoreController);
 
         formatter.Serialize(stream, highScoreData);
         stream.Close();
     }
 
-    public static HighScoreData LoadHighScore(HighScoreController highScoreController)
+    public static HighScoreData LoadHighScore()
     {
         if (!File.Exists(_path))
         {
             Debug.Log("File " + _path + " not found. Creating it");
 
-            SaveHighScore(highScoreController);
+            SaveHighScore(new HighScoreData()); // Saves new High Score in a new file with default value
         }
 
         BinaryFormatter formatter = new BinaryFormatter();

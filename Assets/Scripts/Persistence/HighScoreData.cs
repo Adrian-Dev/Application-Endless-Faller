@@ -4,14 +4,14 @@ using System.Collections.Generic;
 [System.Serializable]
 
 /// <summary>
-/// High Score Data encapsulation
+/// High Score Data encapsulation to be saved
 /// </summary>
 public class HighScoreData
 {
-    public int highScore;
+    public int HighScore;
 
-    public HighScoreData(HighScoreController highScoreController)
+    public HighScoreData(int highScore = 0)
     {
-        highScore = highScoreController.HighScore;
+        HighScore = highScore;
     }
 }
