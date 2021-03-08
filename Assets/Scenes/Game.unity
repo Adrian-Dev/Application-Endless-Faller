@@ -1521,13 +1521,17 @@ MonoBehaviour:
   _infoTextMenu: {fileID: 393581655}
   _currentScoreTextUI: {fileID: 1139797786}
   fadeImage: {fileID: 281675762}
-  _boundaryControllerUp: {fileID: 686319314}
-  _boundaryControllerDown: {fileID: 349750676}
-  _nextPlatformTrigger: {fileID: 4461928245769095051}
+  _boundaryTriggerUp: {fileID: 686319314}
+  _boundaryTriggerDown: {fileID: 349750676}
+  _spawnPlatformTrigger: {fileID: 4461928245769095051}
   _platformsController: {fileID: 1992097852}
   _mainCharacterController: {fileID: 1496058436}
   _highScoreController: {fileID: 1241122465}
   _spawnRateController: {fileID: 11400000, guid: c9ae6537d032dc542972a911fc4bf464,
+    type: 2}
+  _platformHighScoreMaterial: {fileID: 2100000, guid: 9dad24aaa04b2d647bc8da1cdb7ce8ea,
+    type: 2}
+  _platformDefaultMaterial: {fileID: 2100000, guid: 31ceaf4ebbc2e86429d6ffef78db6463,
     type: 2}
 --- !u!4 &956302407
 Transform:
@@ -3029,11 +3033,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6568bd7d0dc37b74184a187b2ff6423c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 1
-  _platformHighScoreMaterial: {fileID: 2100000, guid: 9dad24aaa04b2d647bc8da1cdb7ce8ea,
-    type: 2}
-  _platformDefaultMaterial: {fileID: 2100000, guid: 31ceaf4ebbc2e86429d6ffef78db6463,
-    type: 2}
 --- !u!4 &1992097853
 Transform:
   m_ObjectHideFlags: 0
@@ -3578,7 +3577,7 @@ GameObject:
   - component: {fileID: 3898630536722818481}
   - component: {fileID: 4461928245769095051}
   m_Layer: 0
-  m_Name: NextPlatformTrigger
+  m_Name: SpawnPlatformTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3596,6 +3595,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 326e3daed1f21b9438c3de39addb5d5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Triggered: 0
+  TagCollided: 
 --- !u!1001 &5662799565822018480
 PrefabInstance:
   m_ObjectHideFlags: 0

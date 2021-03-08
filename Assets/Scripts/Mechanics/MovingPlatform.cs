@@ -5,29 +5,34 @@
 /// </summary>
 public class MovingPlatform : MonoBehaviour
 {
-    LevelController _levelController;
-    PlatformsController _platformsController;
+    public bool CollidedWithPlayer;
+    public bool CollidedWitBoundary;
 
-    public void InjectDependencies(LevelController levelController, PlatformsController platformsController)
+    private void Start()
     {
-        _levelController = levelController;
-        _platformsController = platformsController;
+        ResetTrigger();
     }
 
-    public void MoveUp()
+    public void ResetTrigger()
     {
-        transform.Translate(Vector3.up * _levelController.PlatformsSpeed * Time.deltaTime);
+        CollidedWithPlayer = false;
+        CollidedWitBoundary = false;
+    }
+
+    public void MoveUp(float speed)
+    {
+        transform.Translate(Vector3.up * speed * Time.deltaTime);
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag.Equals("Player"))
         {
-            _levelController.IncrementScore();
+            CollidedWithPlayer = true;
         }
         else if (other.tag.Equals("Boundary"))
         {
-            _platformsController.ReleasePlatform(this); // Probably not the best place to do this, as the object should not be concerned about creating and releasing/destroying itself (its life cycle)
+            CollidedWitBoundary = true;
         }
     }
 

@@ -3,60 +3,34 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Spawning platform system
+/// Spawning platform system. Decorator pattern?? This class currently wraps the implementation of the pooling system. 
+/// The pooling system could be changed for other system. For example, another implementation, easier but less efficient, 
+/// would be creating a copy of the selected random platform, returning it to the client, and, when calling release, destroying the platform,
+/// keeping always the initial platform list safe
 /// </summary>
 public class PlatformsController : MonoBehaviour
 {
-    [Header("Asset references")]
-    [Tooltip("Reference to asset material when player will surpass current high score")]
-    [SerializeField] Material _platformHighScoreMaterial;
-    [Tooltip("Reference to default asset material")]
-    [SerializeField] Material _platformDefaultMaterial;
+    PoolingSystem<MovingPlatform> _poolPlatforms;
 
-    Transform _initialPosition;
-    PoolPlatformController _poolPlatformController;
-    HighScoreController _highScoreController;
-
-    private int _count;
-    private bool _surpassed;
-
-    public void InjectDependencies(Transform initialPosition, PoolPlatformController poolPlatformController, HighScoreController highScoreController)
+    public void InjectDependencies(List<MovingPlatform> movingPlatformsList)
     {
-        _initialPosition = initialPosition; 
-        _poolPlatformController = poolPlatformController;
-        _highScoreController = highScoreController;
+        _poolPlatforms = new PoolingSystem<MovingPlatform> (movingPlatformsList);
     }
 
-    public void SpawnPlatform() 
+    public MovingPlatform GetRandomPlatform()
     {
-        MovingPlatform platform = _poolPlatformController.GetRandomPlatform();
-        ResetPlatform(platform);
+        MovingPlatform platform = _poolPlatforms.GetRandomItem(); 
 
-        if (!_surpassed && _count == _highScoreController.HighScore) // About to surpass current high score
-        {
-            platform.ChangeMaterial(_platformHighScoreMaterial);
-            _surpassed = true;
-        }
-
-        _count++;
+        return platform;
     }
 
     public void ReleasePlatform(MovingPlatform platform)
     {
-        _poolPlatformController.ReleasePlatform(platform);
+        _poolPlatforms.ReleaseItem(platform);
     }
 
     public void Initialize()
     {
-        _count = 0;
-        _surpassed = false;
-
-        _poolPlatformController.ReleaseAllPlatforms();
-    }
-
-    void ResetPlatform(MovingPlatform platform)
-    {
-        platform.transform.SetPositionAndRotation(_initialPosition.position, Quaternion.identity);
-        platform.ChangeMaterial(_platformDefaultMaterial);
+        _poolPlatforms.ReleaseItems();
     }
 }

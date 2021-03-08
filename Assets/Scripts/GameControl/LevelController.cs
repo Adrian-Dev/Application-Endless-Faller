@@ -6,7 +6,7 @@ using UnityEngine.UI;
 /// <summary>
 /// Controls the game flow and application state
 /// </summary>
-public class LevelController : MonoBehaviour
+public class LevelController : MonoBehaviour // TODO finished tooltips properly
 {
     [Header("References to inject on pause controller")]
     [SerializeField] GameObject _world;
@@ -36,21 +36,25 @@ public class LevelController : MonoBehaviour
     [Header("Reference to Fade Image element")]
     [SerializeField] Image fadeImage;
 
-    [Header("Reference to Depencies to be Injected")]
-    [SerializeField] BoundaryController _boundaryControllerUp;
-    [SerializeField] BoundaryController _boundaryControllerDown;
-    [SerializeField] NextPlatformTrigger _nextPlatformTrigger;
+    [Header("Reference to Depencies")]
+    [SerializeField] BoundaryTrigger _boundaryTriggerUp;
+    [SerializeField] BoundaryTrigger _boundaryTriggerDown;
+    [SerializeField] SpawnPlatformTrigger _spawnPlatformTrigger;
     [SerializeField] PlatformsController _platformsController;
     [SerializeField] MainCharacterController _mainCharacterController;
     [SerializeField] HighScoreController _highScoreController;
-
-    [Header("Asset Spawn Rate Config")]
+    [Tooltip("Asset Spawn Rate Config")]
     [SerializeField] SpawnRateController _spawnRateController;
+
+    [Header("Asset references")]
+    [Tooltip("Reference to asset material when player will surpass current high score")]
+    [SerializeField] Material _platformHighScoreMaterial;
+    [Tooltip("Reference to default asset material")]
+    [SerializeField] Material _platformDefaultMaterial;
 
     PauseController _pauseController;
 
-    PoolPlatformController _poolPlatformController;
-    List<MovingPlatform> _movingPlatformList;
+    List<MovingPlatform> _movingPlatformsList;
 
     public int Score { get { return _score; } }
     int _score;
@@ -69,23 +73,26 @@ public class LevelController : MonoBehaviour
     private float _timeNextPlatform;
     private float _timeElapsed;
 
+    private int _count;
+    private bool _surpassed;
+
     void Awake()
     {
-        // Entry point - Composition Root
+        // Entry point - Composition Root pattern
 
-        _movingPlatformList = new List<MovingPlatform>();
-        LoadPlatformsFromPrefab(_movingPlatformList);
+        // Constructor Injection pattern
 
         _pauseController = new PauseController();
         _pauseController.InjectDependencies(_world, _menu, _UI);
 
-        _poolPlatformController = ScriptableObject.CreateInstance<PoolPlatformController>();
-        _poolPlatformController.InjectDependencies(_movingPlatformList);
+        _movingPlatformsList = new List<MovingPlatform>();
+        LoadPlatformsFromPrefab(_movingPlatformsList);
+        _platformsController.InjectDependencies(_movingPlatformsList);
 
-        _boundaryControllerUp.InjectDependencies(this, _mainCharacterController);
-        _boundaryControllerDown.InjectDependencies(this, _mainCharacterController);
-        _nextPlatformTrigger.InjectDependencies(_platformsController);
-        _platformsController.InjectDependencies(_initialPlatformPosition, _poolPlatformController, _highScoreController);
+        // Set Tags here...
+        _spawnPlatformTrigger.SetTag("MovingPlatform");
+        _boundaryTriggerDown.SetTag("Player");
+        _boundaryTriggerUp.SetTag("Player");
     }
 
     void Start()
@@ -112,30 +119,54 @@ public class LevelController : MonoBehaviour
             }
         }
 
-        if (!_paused)
+        if (!_paused && !_isGameLost)
         {
-            if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
+            if (_boundaryTriggerDown.Triggered || _boundaryTriggerUp.Triggered)
             {
-                _mainCharacterController.MoveLeft();
+                StartCoroutine(LoseGame());
             }
-            else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
+            else
             {
-                _mainCharacterController.MoveRight();
-            }
-
-            foreach (MovingPlatform platform in _movingPlatformList) // Refer to notes about optimization vs use of patterns
-            {
-                if (platform.gameObject.activeSelf)
+                if (_spawnPlatformTrigger.Triggered)
                 {
-                    platform.MoveUp();
+                    SpawnPlatform();
+                    _spawnPlatformTrigger.Triggered = false;
                 }
-            }
 
-            _timeElapsed += Time.deltaTime;
-            if (_timeElapsed > _timeNextPlatform)
-            {
-                _timeElapsed = 0f;
-                IncreasePlatformsSpeed(0.01f);
+                if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
+                {
+                    _mainCharacterController.MoveLeft();
+                }
+                else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
+                {
+                    _mainCharacterController.MoveRight();
+                }
+
+                foreach (MovingPlatform platform in _movingPlatformsList) // Refer to notes about optimization vs use of patterns
+                {
+                    if (platform.gameObject.activeSelf)
+                    {
+                        platform.MoveUp(_speed);
+
+                        if (platform.CollidedWithPlayer)
+                        {
+                            IncrementScore();
+                            platform.CollidedWithPlayer = false;
+                        }
+                        if (platform.CollidedWitBoundary)
+                        {
+                            ReleasePlatform(platform);
+                            platform.CollidedWitBoundary = false;
+                        }
+                    }
+                }
+
+                _timeElapsed += Time.deltaTime;
+                if (_timeElapsed > _timeNextPlatform)
+                {
+                    _timeElapsed = 0f;
+                    IncreasePlatformsSpeed(0.01f);
+                }
             }
 
             _currentScoreTextUI.text = Score.ToString();
@@ -174,12 +205,12 @@ public class LevelController : MonoBehaviour
     /// <summary>
     /// Allows or prevents the game to be paused and resumed each time the user presses the "pause button"
     /// </summary>
-    public void AllowPauseGame(bool value)
+    void AllowPauseGame(bool value)
     {
         _m_allow_pause = value;
     }
 
-    public void PauseGame(bool gameLost = false)
+    void PauseGame(bool gameLost = false)
     {
         _paused = true;
         if (gameLost)
@@ -219,7 +250,7 @@ public class LevelController : MonoBehaviour
         ResumeGame();
     }
 
-    public void IncrementScore()
+    void IncrementScore()
     {
         if (!_isGameLost) // Prevents increasing score if player already lost but the game is still running
         {
@@ -227,17 +258,17 @@ public class LevelController : MonoBehaviour
         }
     }
 
-    public void IncreasePlatformsSpeed(float speed)
+    void IncreasePlatformsSpeed(float speed)
     {
         _speed += speed;
     }
 
-    public void SetGameLost()
+    void SetGameLost()
     {
         _isGameLost = true;
     }
 
-    public void Initialize()
+    void Initialize()
     {
         _m_allow_pause = true;
         _isGameLost = false;
@@ -247,12 +278,25 @@ public class LevelController : MonoBehaviour
         _timeElapsed = 0f;
         _timeNextPlatform = 1f / _spawnRateController.SpawnRate;
 
+        _count = 0;
+        _surpassed = false;
+
+        foreach (MovingPlatform platform in _movingPlatformsList) // Refer to notes about optimization vs use of patterns
+        {
+            platform.gameObject.SetActive(false);
+        }
+
         _highScoreController.LoadCurrentHighScore();
         _highScoreController.WriteHighScoreOnText(_highScoreTextMenu);
 
         _mainCharacterController.Initialize();
-        _platformsController.Initialize(); // platformsController dependes on HighScoreController to have been initialized to work properly. Rework this
-        _platformsController.SpawnPlatform();
+        _platformsController.Initialize();
+
+        _spawnPlatformTrigger.ResetTrigger();
+        _boundaryTriggerUp.ResetTrigger();
+        _boundaryTriggerDown.ResetTrigger();
+
+        SpawnPlatform();
 
         _currentScoreTextUI.text = Score.ToString();
         _infoTextMenu.transform.parent.gameObject.SetActive(false); // work around to get a better solution rather than doing this in this line
@@ -265,11 +309,51 @@ public class LevelController : MonoBehaviour
         for (int i = 0; i < prefabsPoolPlatformList.Count; ++i)
         {
             MovingPlatform platform = Instantiate(prefabsPoolPlatformList[i]);
-            platform.InjectDependencies(this, _platformsController);
             platform.transform.parent = _parentPlatforms;
             platform.gameObject.SetActive(false);
 
+            //TODO set platform TAGS
+
             movingPlatformList.Add(platform);
         }
+    }
+
+    void SpawnPlatform()
+    {
+        MovingPlatform platform = _platformsController.GetRandomPlatform();
+        ResetPlatform(platform);
+
+        platform.gameObject.SetActive(true);
+
+        if (!_surpassed && _count == _highScoreController.HighScore) // About to surpass current high score // latforms controller should only care about spawn and release, according its inner implemtation
+        {
+            platform.ChangeMaterial(_platformHighScoreMaterial);
+            _surpassed = true;
+        }
+
+        _count++;
+    }
+
+    void ReleasePlatform(MovingPlatform platform)
+    {
+        _platformsController.ReleasePlatform(platform);
+        platform.gameObject.SetActive(false);
+    }
+
+    void ResetPlatform(MovingPlatform platform)
+    {
+        platform.transform.SetPositionAndRotation(_initialPlatformPosition.position, Quaternion.identity);
+        platform.ChangeMaterial(_platformDefaultMaterial);
+    }
+
+
+    IEnumerator LoseGame()
+    {
+        SetGameLost();
+        _mainCharacterController.Explode();
+        yield return new WaitForSeconds(0.5f);
+        AllowPauseGame(false);
+        PauseGame(true);
+        yield return null;
     }
 }
