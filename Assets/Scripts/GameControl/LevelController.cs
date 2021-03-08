@@ -90,9 +90,9 @@ public class LevelController : MonoBehaviour // TODO finished tooltips properly 
         _platformsController.InjectDependencies(_movingPlatformsList);
 
         // Set Tags here...
-        _spawnPlatformTrigger.SetTag("MovingPlatform");
-        _boundaryTriggerDown.SetTag("Player");
-        _boundaryTriggerUp.SetTag("Player");
+        _spawnPlatformTrigger.SetTargetTag("MovingPlatform");
+        _boundaryTriggerDown.SetTargetTag("Player");
+        _boundaryTriggerUp.SetTargetTag("Player");
     }
 
     void Start()
@@ -121,16 +121,16 @@ public class LevelController : MonoBehaviour // TODO finished tooltips properly 
 
         if (!_paused && !_isGameLost)
         {
-            if (_boundaryTriggerDown.Triggered || _boundaryTriggerUp.Triggered)
+            if (_boundaryTriggerDown.Collided || _boundaryTriggerUp.Collided)
             {
                 StartCoroutine(LoseGame());
             }
             else
             {
-                if (_spawnPlatformTrigger.Triggered)
+                if (_spawnPlatformTrigger.Collided)
                 {
                     SpawnPlatform();
-                    _spawnPlatformTrigger.Triggered = false;
+                    _spawnPlatformTrigger.ResetCollided();
                 }
 
                 if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
@@ -292,9 +292,9 @@ public class LevelController : MonoBehaviour // TODO finished tooltips properly 
         _mainCharacterController.Initialize();
         _platformsController.Initialize();
 
-        _spawnPlatformTrigger.ResetTrigger();
-        _boundaryTriggerUp.ResetTrigger();
-        _boundaryTriggerDown.ResetTrigger();
+        _spawnPlatformTrigger.ResetCollided();
+        _boundaryTriggerUp.ResetCollided();
+        _boundaryTriggerDown.ResetCollided();
 
         SpawnPlatform();
 

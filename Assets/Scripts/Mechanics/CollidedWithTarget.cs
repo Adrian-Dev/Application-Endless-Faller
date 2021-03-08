@@ -7,29 +7,32 @@ using UnityEngine;
 /// </summary>
 public class CollidedWithTarget : MonoBehaviour
 {
-    public bool Triggered;
-    public string TagCollided;
+    public bool Collided { get { return _collided; } }
+    bool _collided;
+
+    public string TargetTag { get { return _targetTag; } }
+    string _targetTag; 
 
     void Start()
     {
-        ResetTrigger();
+        ResetCollided();
     }
 
-    public void SetTag(string tag)
+    public void SetTargetTag(string targetTag)
     {
-        TagCollided = tag;
+        _targetTag = targetTag;
     }
 
-    public void ResetTrigger()
+    public void ResetCollided()
     {
-        Triggered = false;
+        _collided = false;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag.Equals(TagCollided))
+        if (other.tag.Equals(TargetTag))
         {
-            Triggered = true;
+            _collided = true;
         }
     }
 }
