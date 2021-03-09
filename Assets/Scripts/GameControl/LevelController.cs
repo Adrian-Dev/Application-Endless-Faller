@@ -13,13 +13,7 @@ public class LevelController : MonoBehaviour
     [SerializeField] GameObject _menu;
     [SerializeField] GameObject _UI;
 
-    [Header("Player settings")]
-    [Tooltip("Initial player speed")]
-    [SerializeField] float _playerSpeed;
-
-    [Header("Platforms settings")]
-    [Tooltip("Initial platforms speed")]
-    [SerializeField] float _platformsSpeed;
+    [Header("Platforms references")]
     [Tooltip("Initial spawning platform position in the scene")]
     [SerializeField] Transform _initialPlatformPosition;
     [Tooltip("Parent object where platforms will be childed to")]
@@ -62,8 +56,8 @@ public class LevelController : MonoBehaviour
     public int Score { get { return _score; } }
     int _score;
 
-    private float _initialPlatformSpeed;
-    private float _initialPlayerSpeed;
+    private float _playerSpeed;
+    private float _platformsSpeed;
 
     private bool _paused;
     private bool _pausable;
@@ -85,8 +79,6 @@ public class LevelController : MonoBehaviour
     // Entry point 
     void Start() 
     {
-        _initialPlatformSpeed = _platformsSpeed;
-        _initialPlayerSpeed = _playerSpeed;
         // Composition Root 
 
         _pauseController.InjectDependencies(_world, _menu, _UI);
@@ -298,8 +290,9 @@ public class LevelController : MonoBehaviour
         _pausable = true;
         _isGameLost = false;
         _score = 0;
-        _platformsSpeed = _initialPlatformSpeed;
-        _playerSpeed = _initialPlayerSpeed;
+
+        _platformsSpeed = _gameSettings.InitialPlatformsSpeed;
+        _playerSpeed = _gameSettings.InitialPlayerSpeed;
 
         _timeElapsed = 0f;
         _timeNextPlatform = 1f / _gameSettings.SpawnRate;
