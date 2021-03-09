@@ -13,9 +13,13 @@ public class LevelController : MonoBehaviour
     [SerializeField] GameObject _menu;
     [SerializeField] GameObject _UI;
 
+    [Header("Player settings")]
+    [Tooltip("Initial player speed")]
+    [SerializeField] float _playerSpeed;
+
     [Header("Platforms settings")]
     [Tooltip("Initial platforms speed")]
-    [SerializeField] float _speed;
+    [SerializeField] float _platformsSpeed;
     [Tooltip("Initial spawning platform position in the scene")]
     [SerializeField] Transform _initialPlatformPosition;
     [Tooltip("Parent object where platforms will be childed to")]
@@ -58,7 +62,8 @@ public class LevelController : MonoBehaviour
     public int Score { get { return _score; } }
     int _score;
 
-    private float _initialSpeed;
+    private float _initialPlatformSpeed;
+    private float _initialPlayerSpeed;
 
     private bool _paused;
     private bool _pausable;
@@ -80,8 +85,8 @@ public class LevelController : MonoBehaviour
     // Entry point 
     void Start() 
     {
-        _initialSpeed = _speed;
-
+        _initialPlatformSpeed = _platformsSpeed;
+        _initialPlayerSpeed = _playerSpeed;
         // Composition Root 
 
         _pauseController.InjectDependencies(_world, _menu, _UI);
@@ -173,7 +178,7 @@ public class LevelController : MonoBehaviour
                     ReleasePlatform(platform);
                 }
 
-                platform.MoveUp(_speed);
+                platform.MoveUp(_platformsSpeed);
             }
         }
     }
@@ -182,11 +187,11 @@ public class LevelController : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
         {
-            _mainCharacter.MoveLeft();
+            _mainCharacter.Move(Vector3.left * _playerSpeed * Time.deltaTime);
         }
         else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
         {
-            _mainCharacter.MoveRight();
+            _mainCharacter.Move(Vector3.right * _playerSpeed * Time.deltaTime);
         }
     }
 
@@ -197,7 +202,7 @@ public class LevelController : MonoBehaviour
 
     void IncreasePlatformsSpeed(float speed)
     {
-        _speed += speed;
+        _platformsSpeed += speed;
     }
 
 
@@ -293,7 +298,8 @@ public class LevelController : MonoBehaviour
         _pausable = true;
         _isGameLost = false;
         _score = 0;
-        _speed = _initialSpeed;
+        _platformsSpeed = _initialPlatformSpeed;
+        _playerSpeed = _initialPlayerSpeed;
 
         _timeElapsed = 0f;
         _timeNextPlatform = 1f / _gameSettings.SpawnRate;
