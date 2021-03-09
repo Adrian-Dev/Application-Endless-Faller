@@ -3,12 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Spawning platform system. Decorator pattern?? This class currently wraps the implementation of the pooling system. 
-/// The pooling system could be changed for other system. For example, another implementation, easier but less efficient, 
-/// would be creating a copy of the selected random platform, returning it to the client, and, when calling release, destroying the platform,
-/// keeping always the initial platform list safe
+/// Provides moving platforms to a consumer 
 /// </summary>
-public class PlatformsController : MonoBehaviour
+public class MovingPlatformProvider : MonoBehaviour
 {
     PoolingSystem<MovingPlatform> _poolPlatforms;
 

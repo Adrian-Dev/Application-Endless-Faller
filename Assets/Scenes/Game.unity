@@ -1420,11 +1420,10 @@ MonoBehaviour:
   _boundaryUpTrigger: {fileID: 566839728151563995}
   _boundaryDownTrigger: {fileID: 2018637948}
   _spawnPlatformTrigger: {fileID: 4461928245769095051}
-  _platformsController: {fileID: 1992097852}
-  _mainCharacterController: {fileID: 1496058436}
+  _movingPlatformProvider: {fileID: 1992097852}
+  _mainCharacter: {fileID: 1496058436}
   _highScoreController: {fileID: 1241122465}
-  _spawnRateController: {fileID: 11400000, guid: c9ae6537d032dc542972a911fc4bf464,
-    type: 2}
+  _gameSettings: {fileID: 11400000, guid: 75f70813ea994e74faad93441cf3a835, type: 2}
   _platformHighScoreMaterial: {fileID: 2100000, guid: 9dad24aaa04b2d647bc8da1cdb7ce8ea,
     type: 2}
   _platformDefaultMaterial: {fileID: 2100000, guid: 31ceaf4ebbc2e86429d6ffef78db6463,
@@ -2911,7 +2910,7 @@ GameObject:
   - component: {fileID: 1992097853}
   - component: {fileID: 1992097852}
   m_Layer: 0
-  m_Name: PlatformsController
+  m_Name: MovingPlatformProvider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

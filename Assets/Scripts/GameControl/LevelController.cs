@@ -4,9 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Controls the game flow and application state
+/// Controls the game flow and level state
 /// </summary>
-public class LevelController : MonoBehaviour // TODO finished tooltips properly and description of all scripts
+public class LevelController : MonoBehaviour
 {
     [Header("References to inject on pause controller")]
     [SerializeField] GameObject _world;
@@ -25,12 +25,11 @@ public class LevelController : MonoBehaviour // TODO finished tooltips properly 
     [SerializeField] Button _continueButton;
     [SerializeField] Button _restartButton;
     [SerializeField] Text _currentScoreTextMenu;
-    [Tooltip("Refence to high score in the Menu UI")]
     [SerializeField] Text _highScoreTextMenu;
+    [Tooltip("Message displayed when poping the Menu up")]
     [SerializeField] Text _infoTextMenu;
 
     [Header("References to UI elements")]
-    [Tooltip("Reference to players score UI element")]
     [SerializeField] Text _currentScoreTextUI;
 
     [Header("Reference to Fade Image element")]
@@ -40,16 +39,16 @@ public class LevelController : MonoBehaviour // TODO finished tooltips properly 
     [SerializeField] CollidedWithTarget _boundaryUpTrigger;
     [SerializeField] CollidedWithTarget _boundaryDownTrigger;
     [SerializeField] CollidedWithTarget _spawnPlatformTrigger;
-    [SerializeField] PlatformsController _platformsController;
-    [SerializeField] MainCharacterController _mainCharacterController;
+    [SerializeField] MovingPlatformProvider _movingPlatformProvider;
+    [SerializeField] MainCharacter _mainCharacter;
     [SerializeField] HighScoreController _highScoreController;
-    [Tooltip("Asset Spawn Rate Config")]
-    [SerializeField] SpawnRateController _spawnRateController;
 
-    [Header("Asset references")]
-    [Tooltip("Reference to asset material when player will surpass current high score")]
+    [Header("References to assets")]
+    [Tooltip("Game settings file")]
+    [SerializeField] GameSettings _gameSettings;
+    [Tooltip("Material when surpassing current high score")]
     [SerializeField] Material _platformHighScoreMaterial;
-    [Tooltip("Reference to default asset material")]
+    [Tooltip("Default material")]
     [SerializeField] Material _platformDefaultMaterial;
 
     PauseController _pauseController;
@@ -61,7 +60,7 @@ public class LevelController : MonoBehaviour // TODO finished tooltips properly 
 
     private float _initialSpeed;
 
-    private bool _paused; // switch values for showing menu (game is paused) and closing menu (game is playing) 
+    private bool _paused;
     private bool _pausable;
 
     private bool _isGameLost;
@@ -83,14 +82,12 @@ public class LevelController : MonoBehaviour // TODO finished tooltips properly 
     {
         _initialSpeed = _speed;
 
-        // Composition Root pattern
-
-        // Constructor Injection pattern
+        // Composition Root 
 
         _pauseController.InjectDependencies(_world, _menu, _UI);
 
         LoadPlatformsFromPrefab(_movingPlatformsList);
-        _platformsController.InjectDependencies(_movingPlatformsList);
+        _movingPlatformProvider.InjectDependencies(_movingPlatformsList);
 
         _spawnPlatformTrigger.SetTargetTag("MovingPlatform");
         _boundaryDownTrigger.SetTargetTag("Player");
@@ -185,11 +182,11 @@ public class LevelController : MonoBehaviour // TODO finished tooltips properly 
     {
         if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
         {
-            _mainCharacterController.MoveLeft();
+            _mainCharacter.MoveLeft();
         }
         else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
         {
-            _mainCharacterController.MoveRight();
+            _mainCharacter.MoveRight();
         }
     }
 
@@ -203,44 +200,10 @@ public class LevelController : MonoBehaviour // TODO finished tooltips properly 
         _speed += speed;
     }
 
-    void Initialize()
-    {
-        _pausable = true;
-        _isGameLost = false;
-        _score = 0;
-        _speed = _initialSpeed;
-
-        _timeElapsed = 0f;
-        _timeNextPlatform = 1f / _spawnRateController.SpawnRate;
-
-        _spawnedPlatformsCount = 0;
-        _highScoreSurpassed = false;
-
-        WriteScoreToText(_currentScoreTextUI);
-        DisplayInfoText(false);
-
-        foreach (MovingPlatform platform in _movingPlatformsList)
-        {
-            platform.gameObject.SetActive(false);
-            platform.CollidedWithTargets[0].ResetCollided();
-            platform.CollidedWithTargets[1].ResetCollided();
-        }
-
-        _spawnPlatformTrigger.ResetCollided();
-        _boundaryUpTrigger.ResetCollided();
-        _boundaryDownTrigger.ResetCollided();
-
-        _highScoreController.LoadCurrentHighScore();
-        _highScoreController.WriteHighScoreOnText(_highScoreTextMenu);
-
-        _mainCharacterController.Initialize();
-        _platformsController.Initialize();
-    }
-
 
     void SpawnPlatform()
     {
-        MovingPlatform platform = _platformsController.GetRandomPlatform();
+        MovingPlatform platform = _movingPlatformProvider.GetRandomPlatform();
         ResetPlatform(platform);
 
         platform.gameObject.SetActive(true);
@@ -256,7 +219,7 @@ public class LevelController : MonoBehaviour // TODO finished tooltips properly 
  
     void ReleasePlatform(MovingPlatform platform)
     {
-        _platformsController.ReleasePlatform(platform);
+        _movingPlatformProvider.ReleasePlatform(platform);
         platform.gameObject.SetActive(false);
     }
 
@@ -292,14 +255,14 @@ public class LevelController : MonoBehaviour // TODO finished tooltips properly 
 
     void DisplayInfoText(bool value)
     {
-        _infoTextMenu.transform.parent.gameObject.SetActive(value); // Inform user of new high score
+        _infoTextMenu.transform.parent.gameObject.SetActive(value);
     }
 
 
     IEnumerator LoseGame()
     {
         _isGameLost = true;
-        _mainCharacterController.Explode();
+        _mainCharacter.Explode();
         yield return new WaitForSeconds(0.5f);
 
         _pausable = false;
@@ -324,6 +287,40 @@ public class LevelController : MonoBehaviour // TODO finished tooltips properly 
         yield return null;
     }
 
+
+    void Initialize()
+    {
+        _pausable = true;
+        _isGameLost = false;
+        _score = 0;
+        _speed = _initialSpeed;
+
+        _timeElapsed = 0f;
+        _timeNextPlatform = 1f / _gameSettings.SpawnRate;
+
+        _spawnedPlatformsCount = 0;
+        _highScoreSurpassed = false;
+
+        WriteScoreToText(_currentScoreTextUI);
+        DisplayInfoText(false);
+
+        foreach (MovingPlatform platform in _movingPlatformsList)
+        {
+            platform.gameObject.SetActive(false);
+            platform.CollidedWithTargets[0].ResetCollided();
+            platform.CollidedWithTargets[1].ResetCollided();
+        }
+
+        _spawnPlatformTrigger.ResetCollided();
+        _boundaryUpTrigger.ResetCollided();
+        _boundaryDownTrigger.ResetCollided();
+
+        _highScoreController.LoadCurrentHighScore();
+        _highScoreController.WriteHighScoreOnText(_highScoreTextMenu);
+
+        _mainCharacter.Initialize();
+        _movingPlatformProvider.Initialize();
+    }
 
     public void PauseGame(bool gameLost = false)
     {

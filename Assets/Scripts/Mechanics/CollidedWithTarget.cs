@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Wraps the behaviour ...
+/// This component encapsulates the notification when colliding against a certain target
 /// </summary>
 public class CollidedWithTarget : MonoBehaviour
 {

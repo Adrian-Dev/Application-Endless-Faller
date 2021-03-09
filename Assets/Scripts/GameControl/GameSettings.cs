@@ -5,8 +5,8 @@ using UnityEngine;
 /// <summary>
 /// Platform spawn rate settings
 /// </summary>
-[CreateAssetMenu(fileName = "Spawn Rate Config", menuName = "Spawn Platform/Spawn Rate", order = 1)]
-public class SpawnRateController : ScriptableObject
+[CreateAssetMenu(fileName = "Game Settings", menuName = "Game Settings File", order = 1)]
+public class GameSettings : ScriptableObject
 {
     [Range(1f,50f)]
     [SerializeField] float spawnRate; 

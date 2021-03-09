@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Player Controller
+/// Handles the player behaviour
 /// </summary>
-public class MainCharacterController : MonoBehaviour
+public class MainCharacter : MonoBehaviour
 {
     [Tooltip("Movement speed")]
     [SerializeField] float _speed;
