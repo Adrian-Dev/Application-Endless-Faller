@@ -148,15 +148,15 @@ public class LevelController : MonoBehaviour // TODO finished tooltips properly 
                     {
                         platform.MoveUp(_speed);
 
-                        if (platform.CollidedWithPlayer.Collided)
+                        if (platform.CollidedWithTargets[0].Collided) // Collided with player (refer to SetTargetTag)
                         {
                             IncrementScore();
-                            platform.CollidedWithPlayer.ResetCollided();
+                            platform.CollidedWithTargets[0].ResetCollided();
                         }
-                        if (platform.CollidedWithBoundary.Collided)
+                        if (platform.CollidedWithTargets[1].Collided) // Collided with boundary (refer to SetTargetTag)
                         {
                             ReleasePlatform(platform);
-                            platform.CollidedWithBoundary.ResetCollided();
+                            platform.CollidedWithTargets[1].ResetCollided();
                         }
                     }
                 }
@@ -311,8 +311,8 @@ public class LevelController : MonoBehaviour // TODO finished tooltips properly 
             MovingPlatform platform = Instantiate(prefabsPoolPlatformList[i]);
             platform.transform.parent = _parentPlatforms;
 
-            platform.CollidedWithPlayer.SetTargetTag("Player");
-            platform.CollidedWithBoundary.SetTargetTag("Boundary");
+            platform.CollidedWithTargets[0].SetTargetTag("Player");
+            platform.CollidedWithTargets[1].SetTargetTag("Boundary");
 
             platform.gameObject.SetActive(false);
 

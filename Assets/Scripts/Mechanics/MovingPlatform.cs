@@ -7,16 +7,15 @@ using UnityEngine;
 /// </summary>
 public class MovingPlatform : MonoBehaviour
 {
-    public CollidedWithTarget CollidedWithPlayer { get { return _collidedWithPlayer; } }
-    [SerializeField] CollidedWithTarget _collidedWithPlayer;
-    public CollidedWithTarget CollidedWithBoundary { get { return _collidedWithBoundary; } }
-    [SerializeField] CollidedWithTarget _collidedWithBoundary;
+    public List<CollidedWithTarget> CollidedWithTargets { get { return _collidedWithTargets; } }
+    List<CollidedWithTarget> _collidedWithTargets;
 
     List<Renderer> _renderers;
 
     private void Awake()
     {
         _renderers = new List<Renderer>(GetComponentsInChildren<MeshRenderer>());
+        _collidedWithTargets = new List<CollidedWithTarget>(GetComponents<CollidedWithTarget>());
     }
 
     public void MoveUp(float speed)
