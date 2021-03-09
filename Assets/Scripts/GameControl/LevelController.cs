@@ -178,7 +178,7 @@ public class LevelController : MonoBehaviour
                     ReleasePlatform(platform);
                 }
 
-                platform.MoveUp(_platformsSpeed);
+                platform.Move(Vector3.up * _platformsSpeed * Time.deltaTime);
             }
         }
     }

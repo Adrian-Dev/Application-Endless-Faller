@@ -18,9 +18,9 @@ public class MovingPlatform : MonoBehaviour
         _collidedWithTargets = new List<CollidedWithTarget>(GetComponents<CollidedWithTarget>());
     }
 
-    public void MoveUp(float speed)
+    public void Move(Vector3 moveVector)
     {
-        transform.Translate(Vector3.up * speed * Time.deltaTime);
+        transform.Translate(moveVector);
     }
 
     public void ChangeMaterial(Material material)
