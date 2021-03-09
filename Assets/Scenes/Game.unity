@@ -1328,7 +1328,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 956302406}
-        m_MethodName: RestartGame
+        m_MethodName: RestartLevel
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1417,8 +1417,8 @@ MonoBehaviour:
   _infoTextMenu: {fileID: 393581655}
   _currentScoreTextUI: {fileID: 1139797786}
   fadeImage: {fileID: 281675762}
-  _boundaryTriggerUp: {fileID: 566839728151563995}
-  _boundaryTriggerDown: {fileID: 2018637948}
+  _boundaryUpTrigger: {fileID: 566839728151563995}
+  _boundaryDownTrigger: {fileID: 2018637948}
   _spawnPlatformTrigger: {fileID: 4461928245769095051}
   _platformsController: {fileID: 1992097852}
   _mainCharacterController: {fileID: 1496058436}
@@ -3050,8 +3050,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2829080e8b624b74e9a12a1715e61889, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Triggered: 0
-  TagCollided: 
 --- !u!1 &2023062616
 GameObject:
   m_ObjectHideFlags: 0
@@ -3504,8 +3502,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2829080e8b624b74e9a12a1715e61889, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Triggered: 0
-  TagCollided: 
 --- !u!54 &860543530711521868
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3661,8 +3657,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2829080e8b624b74e9a12a1715e61889, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Triggered: 0
-  TagCollided: 
 --- !u!1001 &5662799565822018480
 PrefabInstance:
   m_ObjectHideFlags: 0

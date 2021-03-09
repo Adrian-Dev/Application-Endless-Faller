@@ -37,8 +37,8 @@ public class LevelController : MonoBehaviour // TODO finished tooltips properly 
     [SerializeField] Image fadeImage;
 
     [Header("Reference to Depencies")]
-    [SerializeField] CollidedWithTarget _boundaryTriggerUp;
-    [SerializeField] CollidedWithTarget _boundaryTriggerDown;
+    [SerializeField] CollidedWithTarget _boundaryUpTrigger;
+    [SerializeField] CollidedWithTarget _boundaryDownTrigger;
     [SerializeField] CollidedWithTarget _spawnPlatformTrigger;
     [SerializeField] PlatformsController _platformsController;
     [SerializeField] MainCharacterController _mainCharacterController;
@@ -59,203 +59,143 @@ public class LevelController : MonoBehaviour // TODO finished tooltips properly 
     public int Score { get { return _score; } }
     int _score;
 
-    public float PlatformsSpeed
-    {
-        get { return _speed; }
-    }
     private float _initialSpeed;
 
     private bool _paused; // switch values for showing menu (game is paused) and closing menu (game is playing) 
-    private bool _m_allow_pause;
+    private bool _pausable;
 
     private bool _isGameLost;
 
     private float _timeNextPlatform;
     private float _timeElapsed;
 
-    private int _count;
-    private bool _surpassed;
+    private int _spawnedPlatformsCount;
+    private bool _highScoreSurpassed;
 
     void Awake()
     {
-        // Entry point - Composition Root pattern
-
-        // Constructor Injection pattern
-
         _pauseController = new PauseController();
-        _pauseController.InjectDependencies(_world, _menu, _UI);
-
         _movingPlatformsList = new List<MovingPlatform>();
-        LoadPlatformsFromPrefab(_movingPlatformsList);
-        _platformsController.InjectDependencies(_movingPlatformsList);
-
-        // Set Tags here...
-        _spawnPlatformTrigger.SetTargetTag("MovingPlatform");
-        _boundaryTriggerDown.SetTargetTag("Player");
-        _boundaryTriggerUp.SetTargetTag("Player");
     }
 
-    void Start()
+    // Entry point 
+    void Start() 
     {
         _initialSpeed = _speed;
 
-        RestartGame();
+        // Composition Root pattern
+
+        // Constructor Injection pattern
+
+        _pauseController.InjectDependencies(_world, _menu, _UI);
+
+        LoadPlatformsFromPrefab(_movingPlatformsList);
+        _platformsController.InjectDependencies(_movingPlatformsList);
+
+        _spawnPlatformTrigger.SetTargetTag("MovingPlatform");
+        _boundaryDownTrigger.SetTargetTag("Player");
+        _boundaryUpTrigger.SetTargetTag("Player");
+
+        RestartLevel();
     }
 
     void Update()
     {
-        if (_m_allow_pause)
+        if (_pausable)
         {
-            KeyCode pauseMenuKey;
-#if UNITY_EDITOR
-            pauseMenuKey = KeyCode.M;
-#else
-            pauseMenuKey = KeyCode.Escape;
-#endif
-            if (Input.GetKeyUp(pauseMenuKey))
-            {
-                _paused = !_paused;
-                SetPauseResume();
-            }
+            HandlePauseResume();
         }
 
         if (!_paused && !_isGameLost)
         {
-            if (_boundaryTriggerDown.Collided || _boundaryTriggerUp.Collided)
+            if (_boundaryDownTrigger.Collided || _boundaryUpTrigger.Collided)
             {
                 StartCoroutine(LoseGame());
             }
             else
             {
-                if (_spawnPlatformTrigger.Collided)
-                {
-                    SpawnPlatform();
-                    _spawnPlatformTrigger.ResetCollided();
-                }
-
-                if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
-                {
-                    _mainCharacterController.MoveLeft();
-                }
-                else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
-                {
-                    _mainCharacterController.MoveRight();
-                }
-
-                foreach (MovingPlatform platform in _movingPlatformsList) // Refer to notes about optimization vs use of patterns
-                {
-                    if (platform.gameObject.activeSelf)
-                    {
-                        platform.MoveUp(_speed);
-
-                        if (platform.CollidedWithTargets[0].Collided) // Collided with player (refer to SetTargetTag)
-                        {
-                            IncrementScore();
-                            platform.CollidedWithTargets[0].ResetCollided();
-                        }
-                        if (platform.CollidedWithTargets[1].Collided) // Collided with boundary (refer to SetTargetTag)
-                        {
-                            ReleasePlatform(platform);
-                            platform.CollidedWithTargets[1].ResetCollided();
-                        }
-                    }
-                }
-
                 _timeElapsed += Time.deltaTime;
                 if (_timeElapsed > _timeNextPlatform)
                 {
                     _timeElapsed = 0f;
                     IncreasePlatformsSpeed(0.01f);
                 }
+
+                if (_spawnPlatformTrigger.Collided)
+                {
+                    _spawnPlatformTrigger.ResetCollided();
+                    SpawnPlatform();
+                }
+
+                HandlePlatformLoop();
+
+                HandlePlayerLoop();
             }
 
-            _currentScoreTextUI.text = Score.ToString();
+            WriteScoreToText(_currentScoreTextUI);
         }
 
     }
 
-    void SetPauseResume()
+    void HandlePauseResume()
     {
-        if (_paused)
+        KeyCode pauseMenuKey;
+#if UNITY_EDITOR
+        pauseMenuKey = KeyCode.M;
+#else
+        pauseMenuKey = KeyCode.Escape;
+#endif
+        if (Input.GetKeyUp(pauseMenuKey))
         {
-            PauseGame();
+            _paused = !_paused;
+            if (_paused)
+            {
+                PauseGame();
+            }
+            else
+            {
+                ResumeGame();
+            }
         }
-        else
+    }
+
+    void HandlePlatformLoop()
+    {
+        foreach (MovingPlatform platform in _movingPlatformsList) // Refer to notes about optimization vs use of patterns
         {
-            ResumeGame();
+            if (platform.gameObject.activeSelf)
+            {
+                if (platform.CollidedWithTargets[0].Collided) // Collided with player (refer to SetTargetTag)
+                {
+                    platform.CollidedWithTargets[0].ResetCollided();
+                    IncrementScore();
+                }
+                if (platform.CollidedWithTargets[1].Collided) // Collided with boundary (refer to SetTargetTag)
+                {
+                    platform.CollidedWithTargets[1].ResetCollided();
+                    ReleasePlatform(platform);
+                }
+
+                platform.MoveUp(_speed);
+            }
         }
     }
 
-    void FadeOff()
+    void HandlePlayerLoop()
     {
-        fadeImage.CrossFadeAlpha(1.0f, 0.0f, true);
-        fadeImage.gameObject.SetActive(true);
-        fadeImage.CrossFadeAlpha(0.0f, 2.0f, true);
-        StartCoroutine(FadeCamera(2.0f));
-    }
-
-    IEnumerator FadeCamera(float seconds)
-    {
-        yield return new WaitForSeconds(seconds);
-        fadeImage.gameObject.SetActive(false);
-
-        yield return null;
-    }
-
-    /// <summary>
-    /// Allows or prevents the game to be paused and resumed each time the user presses the "pause button"
-    /// </summary>
-    void AllowPauseGame(bool value)
-    {
-        _m_allow_pause = value;
-    }
-
-    void PauseGame(bool gameLost = false)
-    {
-        _paused = true;
-        if (gameLost)
+        if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
         {
-            _restartButton.gameObject.SetActive(true);
-            _continueButton.gameObject.SetActive(false);
+            _mainCharacterController.MoveLeft();
         }
-        else
+        else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
         {
-            _restartButton.gameObject.SetActive(false);
-            _continueButton.gameObject.SetActive(true);
+            _mainCharacterController.MoveRight();
         }
-
-        _currentScoreTextMenu.text = _score.ToString();
-
-        if (_score > _highScoreController.HighScore) // Persist new high score
-        {
-            _highScoreController.SetNewHighScore(_score);
-            _highScoreController.WriteHighScoreOnText(_highScoreTextMenu);
-
-            _infoTextMenu.transform.parent.gameObject.SetActive(true); // Inform user of new high score
-        }
-
-        _pauseController.PauseGame();
-    }
-
-    public void ResumeGame() // Also meant to be wired in Scene with CONTINUE button
-    {
-        _paused = false;
-        _pauseController.ResumeGame();
-    }
-
-    public void RestartGame() // Also meant to be wired in Scene with RESTART button
-    {
-        Initialize();
-        FadeOff();
-        ResumeGame();
     }
 
     void IncrementScore()
     {
-        if (!_isGameLost) // Prevents increasing score if player already lost but the game is still running
-        {
-            _score++;
-        }
+        _score++;
     }
 
     void IncreasePlatformsSpeed(float speed)
@@ -263,14 +203,9 @@ public class LevelController : MonoBehaviour // TODO finished tooltips properly 
         _speed += speed;
     }
 
-    void SetGameLost()
-    {
-        _isGameLost = true;
-    }
-
     void Initialize()
     {
-        _m_allow_pause = true;
+        _pausable = true;
         _isGameLost = false;
         _score = 0;
         _speed = _initialSpeed;
@@ -278,28 +213,57 @@ public class LevelController : MonoBehaviour // TODO finished tooltips properly 
         _timeElapsed = 0f;
         _timeNextPlatform = 1f / _spawnRateController.SpawnRate;
 
-        _count = 0;
-        _surpassed = false;
+        _spawnedPlatformsCount = 0;
+        _highScoreSurpassed = false;
 
-        foreach (MovingPlatform platform in _movingPlatformsList) // Refer to notes about optimization vs use of patterns
+        WriteScoreToText(_currentScoreTextUI);
+        DisplayInfoText(false);
+
+        foreach (MovingPlatform platform in _movingPlatformsList)
         {
             platform.gameObject.SetActive(false);
+            platform.CollidedWithTargets[0].ResetCollided();
+            platform.CollidedWithTargets[1].ResetCollided();
         }
+
+        _spawnPlatformTrigger.ResetCollided();
+        _boundaryUpTrigger.ResetCollided();
+        _boundaryDownTrigger.ResetCollided();
 
         _highScoreController.LoadCurrentHighScore();
         _highScoreController.WriteHighScoreOnText(_highScoreTextMenu);
 
         _mainCharacterController.Initialize();
         _platformsController.Initialize();
+    }
 
-        _spawnPlatformTrigger.ResetCollided();
-        _boundaryTriggerUp.ResetCollided();
-        _boundaryTriggerDown.ResetCollided();
 
-        SpawnPlatform();
+    void SpawnPlatform()
+    {
+        MovingPlatform platform = _platformsController.GetRandomPlatform();
+        ResetPlatform(platform);
 
-        _currentScoreTextUI.text = Score.ToString();
-        _infoTextMenu.transform.parent.gameObject.SetActive(false); // work around to get a better solution rather than doing this in this line
+        platform.gameObject.SetActive(true);
+
+        if (!_highScoreSurpassed && _spawnedPlatformsCount == _highScoreController.HighScore) // About to surpass current high score
+        {
+            platform.ChangeMaterial(_platformHighScoreMaterial);
+            _highScoreSurpassed = true;
+        }
+
+        _spawnedPlatformsCount++;
+    }
+ 
+    void ReleasePlatform(MovingPlatform platform)
+    {
+        _platformsController.ReleasePlatform(platform);
+        platform.gameObject.SetActive(false);
+    }
+
+    void ResetPlatform(MovingPlatform platform)
+    {
+        platform.transform.SetPositionAndRotation(_initialPlatformPosition.position, Quaternion.identity);
+        platform.ChangeMaterial(_platformDefaultMaterial);
     }
 
     void LoadPlatformsFromPrefab(List<MovingPlatform> movingPlatformList)
@@ -320,42 +284,85 @@ public class LevelController : MonoBehaviour // TODO finished tooltips properly 
         }
     }
 
-    void SpawnPlatform()
+
+    void WriteScoreToText(Text text)
     {
-        MovingPlatform platform = _platformsController.GetRandomPlatform();
-        ResetPlatform(platform);
-
-        platform.gameObject.SetActive(true);
-
-        if (!_surpassed && _count == _highScoreController.HighScore) // About to surpass current high score // latforms controller should only care about spawn and release, according its inner implemtation
-        {
-            platform.ChangeMaterial(_platformHighScoreMaterial);
-            _surpassed = true;
-        }
-
-        _count++;
+        text.text = _score.ToString();
     }
 
-    void ReleasePlatform(MovingPlatform platform)
+    void DisplayInfoText(bool value)
     {
-        _platformsController.ReleasePlatform(platform);
-        platform.gameObject.SetActive(false);
-    }
-
-    void ResetPlatform(MovingPlatform platform)
-    {
-        platform.transform.SetPositionAndRotation(_initialPlatformPosition.position, Quaternion.identity);
-        platform.ChangeMaterial(_platformDefaultMaterial);
+        _infoTextMenu.transform.parent.gameObject.SetActive(value); // Inform user of new high score
     }
 
 
     IEnumerator LoseGame()
     {
-        SetGameLost();
+        _isGameLost = true;
         _mainCharacterController.Explode();
         yield return new WaitForSeconds(0.5f);
-        AllowPauseGame(false);
+
+        _pausable = false;
         PauseGame(true);
+
         yield return null;
+    }
+
+    void FadeOff()
+    {
+        fadeImage.CrossFadeAlpha(1.0f, 0.0f, true);
+        fadeImage.gameObject.SetActive(true);
+        fadeImage.CrossFadeAlpha(0.0f, 2.0f, true);
+        StartCoroutine(FadeCamera(2.0f));
+    }
+
+    IEnumerator FadeCamera(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        fadeImage.gameObject.SetActive(false);
+
+        yield return null;
+    }
+
+
+    public void PauseGame(bool gameLost = false)
+    {
+        _paused = true;
+        if (gameLost)
+        {
+            _restartButton.gameObject.SetActive(true);
+            _continueButton.gameObject.SetActive(false);
+        }
+        else
+        {
+            _restartButton.gameObject.SetActive(false);
+            _continueButton.gameObject.SetActive(true);
+        }
+
+        WriteScoreToText(_currentScoreTextMenu);
+
+        if (_score > _highScoreController.HighScore) // Persist new high score
+        {
+            _highScoreController.SetNewHighScore(_score);
+            _highScoreController.WriteHighScoreOnText(_highScoreTextMenu);
+
+            DisplayInfoText(true); // Inform user of new high score
+        }
+
+        _pauseController.PauseGame();
+    }
+
+    public void ResumeGame() // Also meant to be wired in Scene with CONTINUE button
+    {
+        _paused = false;
+        _pauseController.ResumeGame();
+    }
+
+    public void RestartLevel() // Also meant to be wired in Scene with RESTART button
+    {
+        Initialize();
+        SpawnPlatform();
+        FadeOff();
+        ResumeGame();
     }
 }

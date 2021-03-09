@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// 
+/// Wraps the behaviour ...
 /// </summary>
 public class CollidedWithTarget : MonoBehaviour
 {
@@ -14,7 +14,7 @@ public class CollidedWithTarget : MonoBehaviour
     string _targetTag;
 
 
-    void Awake()
+    void Start()
     {
         ResetCollided();
     }

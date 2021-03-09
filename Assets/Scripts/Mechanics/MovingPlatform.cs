@@ -12,7 +12,7 @@ public class MovingPlatform : MonoBehaviour
 
     List<Renderer> _renderers;
 
-    private void Awake()
+    void Awake()
     {
         _renderers = new List<Renderer>(GetComponentsInChildren<MeshRenderer>());
         _collidedWithTargets = new List<CollidedWithTarget>(GetComponents<CollidedWithTarget>());

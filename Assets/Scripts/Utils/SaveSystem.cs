@@ -3,7 +3,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
 /// <summary>
-/// Loading and saving utility
+/// Loading and saving utility for generic serializable objects
 /// </summary>
 /// <typeparam name="T"></typeparam>
 public static class SaveSystem<T> where T : class, new()
