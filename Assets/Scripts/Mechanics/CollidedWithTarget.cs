@@ -5,6 +5,8 @@ using UnityEngine;
 /// <summary>
 /// This component encapsulates the notification when colliding against a certain target
 /// </summary>
+
+[RequireComponent(typeof(Collider))]
 public class CollidedWithTarget : MonoBehaviour
 {
     public bool Collided { get { return _collided; } }

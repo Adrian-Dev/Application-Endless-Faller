@@ -18,14 +18,14 @@ public class HighScoreController : MonoBehaviour
 
     public void LoadCurrentHighScore()
     {
-        HighScoreData highScoreData = SaveSystem<HighScoreData>.Load(fileName);
+        HighScoreData highScoreData = SavingSystem<HighScoreData>.Load(fileName);
         _highScore = highScoreData.HighScore;
     }
 
     public void SetNewHighScore(int newHighScore)
     {
         _highScore = newHighScore;
-        SaveSystem<HighScoreData>.Save(new HighScoreData(_highScore), fileName);
+        SavingSystem<HighScoreData>.Save(new HighScoreData(_highScore), fileName);
     }
 
     public void WriteHighScoreOnText(Text highScoreText)

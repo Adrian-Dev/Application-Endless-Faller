@@ -6,18 +6,18 @@ using UnityEngine;
 /// Loading and saving utility for generic serializable objects
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public static class SaveSystem<T> where T : class, new()
+public static class SavingSystem<T> where T : class, new()
 {
     private static string _path = Application.persistentDataPath;
 
-    public static void Save(T type, string fileName)
+    public static void Save(T instace, string fileName)
     {
         string tempFilePath = _path + "/" + fileName;
 
         BinaryFormatter formatter = new BinaryFormatter();
         FileStream stream = new FileStream(tempFilePath, FileMode.Create);
 
-        formatter.Serialize(stream, type);
+        formatter.Serialize(stream, instace);
         stream.Close();
     }
 
@@ -35,9 +35,9 @@ public static class SaveSystem<T> where T : class, new()
         BinaryFormatter formatter = new BinaryFormatter();
         FileStream stream = new FileStream(tempFilePath, FileMode.Open);
 
-        T type = formatter.Deserialize(stream) as T;
+        T instace = formatter.Deserialize(stream) as T;
         stream.Close();
 
-        return type;
+        return instace;
     }
 }
