@@ -6,10 +6,10 @@ using UnityEngine.TestTools;
 
 namespace Tests
 {
-    public class DummyTest
+    public class PoolingSystemTest
     {
         [Test]
-        public void DummyMethodTest()
+        public void PoolingSystemMethodTest()
         {
             // Use the Assert class to test conditions
         }
