@@ -9,7 +9,7 @@ namespace Tests
     public class MovingPlatformProviderTest
     {
         [UnityTest]
-        public IEnumerator MovingPlatformProviderOneItemTest()
+        public IEnumerator AddPlatformTest()
         {
             GameObject gameObject0 = new GameObject();
             MovingPlatform movingPlatform = gameObject0.AddComponent<MovingPlatform>();
@@ -30,7 +30,31 @@ namespace Tests
         }
 
         [UnityTest]
-        public IEnumerator MovingPlatformProviderEmptyTest()
+        public IEnumerator ReleasePlatformTest()
+        {
+            GameObject gameObject0 = new GameObject();
+            MovingPlatform movingPlatform = gameObject0.AddComponent<MovingPlatform>();
+
+            GameObject gameObject1 = new GameObject();
+            MovingPlatformProvider movingPlatformProvider = gameObject1.AddComponent<MovingPlatformProvider>();
+
+            List<MovingPlatform> movingPlatformList = new List<MovingPlatform>();
+            movingPlatformList.Add(movingPlatform);
+            movingPlatformProvider.InjectDependencies(movingPlatformList);
+
+            // Since there is only one platform in the list, it should return the same reference to the one added previously
+            MovingPlatform randomMovingPlatform = movingPlatformProvider.GetRandomPlatform();
+
+            movingPlatformProvider.ReleasePlatform(randomMovingPlatform); // Release it and then get another platform. Should return the same
+            randomMovingPlatform = movingPlatformProvider.GetRandomPlatform();
+
+            Assert.AreEqual(movingPlatform, randomMovingPlatform);
+
+            yield return null;
+        }
+
+        [UnityTest]
+        public IEnumerator EmptyProviderTest()
         {
             GameObject gameObject = new GameObject();
             MovingPlatformProvider movingPlatformProvider = gameObject.AddComponent<MovingPlatformProvider>();

@@ -9,7 +9,7 @@ namespace Tests
     public class SavingSystemTest
     {
         [Test]
-        public void SavingSystemMethodTest()
+        public void SaveAndLoadTest()
         {
             string fileName = "TempUnitTestFile.bin";
 

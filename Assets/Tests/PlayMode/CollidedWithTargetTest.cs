@@ -9,7 +9,7 @@ namespace Tests
     public class CollidedWithTargetTest
     {
         [UnityTest]
-        public IEnumerator CollidedWithTargetMethodTest()
+        public IEnumerator CollidedTest()
         {
             GameObject gameObject = new GameObject();
 
@@ -20,9 +20,7 @@ namespace Tests
             collidedWithTarget.ResetCollided();
             collidedWithTarget.SetTargetTag("Untagged"); // default target tag value
 
-
             GameObject gameObjectTarget = new GameObject();
-
             gameObjectTarget.AddComponent<BoxCollider>();
 
             Rigidbody rigidbody = gameObjectTarget.AddComponent<Rigidbody>();
