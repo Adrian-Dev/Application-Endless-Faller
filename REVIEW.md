@@ -3,11 +3,7 @@
 ## Applicant name - Adrian M.
 ---
 ### Summary
-Overall I have a good feeling about the game play and I am satisfied with the project architecture design, following a decoupled, modular guideline. I did not spend so much time in the core game, gameplay mechanics or visual effects, but rather in designing and figuring out how to implement some side functionality (scriptable object, persistence, modular and proper architecture, pause menu). I had to refactor a little bit the initial code I had proposed to make it work as I wanted to.
-
-The only remaining thing to be completed from the requirements list is the ‘Automated test’. It would probably take me some time to prepare as I am not yet experienced with this, so I prefered to actually submit the current solution as the final release, and then do some research on my own. The application has been tested by doing iterative playtesting.
-
-This project proves that architecture, design patterns, applying solid principles, best practices and automated tests are still some concepts I need to improve, and this is one of the main reasons why I want to join an experienced team familiar with these ideas.
+Overall I have a good feeling about the gameplay and I am satisfied with the current architecture design. I did not spend so much time in the gameplay mechanics or visual effects, but rather in designing and implementing a proper project and code structure, following a loosely coupled, modular guideline. Adding new functionality, such as new mechanics (player power ups, having platforms moving horizontaly, increase player speed, etc) should be much easier now compared to the first implementation in v1.0.
 
 ### Requirements subtasks 
 
@@ -16,7 +12,7 @@ This project proves that architecture, design patterns, applying solid principle
 - 1 
    - [x] The platforms should be randomly generated. No two playthroughs should have the same pattern.
    - _Time taken: around 1 hour_   
-      - It took some time to prepare all different platforms set-up in Unity editor, but it was pretty straightforward. Platforms have been created as a set of different prefabs, which are then instantiated randomly at runtime. No same platform is selected twice in a row.
+      - It took some time to prepare all different platforms set-up in Unity editor, but it was pretty straightforward. Platforms have been created as a set of different prefabs, which are then instantiated once at runtime and stored in a pool. A generic pooling system has been implemented to handle the pool resources, which is then wrapped by a platform manager to provide and release the required instances without destroying the object, hiding the actual implementation to the consumer (Level Controller).
 
 - 2
    - [x] When I surpass my highscore, this should persist, and I should be able to see it in the UIs when I launch the game again. 
@@ -25,8 +21,8 @@ This project proves that architecture, design patterns, applying solid principle
    - [x] _When I'm about to surpass my highscore, a visual element should inform me of it (a different platform color, a particle effect, etc.)._ 
    - [x] _Don't use PlayerPrefs for highscore persistence._ 
    - _Time taken: around 1 hour and a half and two hours_  
-      - Needed more time than estimated here (30m - 1h), having to prepare the high score interface and cleaning everything up, testing that it works and the implementation is robust. Also spent some time to on researching how to persist data in Unity in different ways. 
-      - Followed implementation in [Brackeys - SAVE & LOAD SYSTEM in Unity](https://www.youtube.com/watch?v=XOjd_qU2Ido/) for persisting high score. Having a saving system is something I had not worked on in Unity, and it was really helpful learning this resource. It also did not require me so much time for completing the test, which is Ok.
+      - Needed more time than estimated here (30m - 1h), having to prepare the high score interface and cleaning everything up, testing that it works and the implementation is robust. Also spent some time on researching how to persist data in Unity in different ways. 
+      - Followed implementation in [Brackeys - SAVE & LOAD SYSTEM in Unity](https://www.youtube.com/watch?v=XOjd_qU2Ido/) for persisting high score. Having a saving system is something I had not worked on in Unity, and it was really helpful learning this resource. It also did not require me so much time for completing the test, which is Ok. I adapted the script to be a template, so the saving and loading system can work with a generic class.
       - To let the player know the current high score is about to be surpassed, a green colored platform will appear.
            
 - 3
@@ -43,7 +39,7 @@ This project proves that architecture, design patterns, applying solid principle
    - [x] When I press escape, the game should pause, and I should have a menu with the option "Continue" and "Go back to main menu". The buttons should either continue the game or take the user back to the home scene. 
    - [x] _When restarting the game, don't reload the scene._ 
    - _Time taken: about two hours and a half and three hours_  
-      -  Also needed more time than estimated here (30m - 1h), since I made a mayor change on the architecture to let it be as decoupled as possible, preparing the game flow, pause option, restart option, etc. At least I think it is a decent job.
+      -  Also needed more time than estimated here (30m - 1h), since I made a mayor change on the architecture to let it be as decoupled as possible, preparing the game flow, pause option, restart option, etc.
       - I used the same pause menu logic I implemented in [BullyYard](https://github.com/mostachostudios/TJ_game/) project.
       - **Note**: ‘Esc’ Key is a reserved key in Editor mode, so I used ‘M’ instead for developing,  but ‘Esc’ will work on build.
       - Changed 'Reset' for 'Restart' in LevelManager, since 'Reset' is a reserved function in Unity
@@ -53,9 +49,8 @@ This project proves that architecture, design patterns, applying solid principle
    - [x] The platform spawn rate and speed should increase the longer the game lasts. 
    - [x] I should be able to change the initial spawn rate in an easy to modify way (scriptable object, config file, etc) 
    - _Time taken: around 1 hour_  
-      - Needed some extra time to check how to properly store the initial spawn rate in a separeted file. Scriptable objects seem a good solution, but will only let change the value in development mode. I searched for a solution that would make possible to change the value once the game is built, but not sure if this was actually the purpose of this task. Anyway, this could be achieved using the same solution introduced for saving the high score, and it could be used for easily adding a difficulty level option (easy, medium, hard) according to the spawn rate value.
-      - Spawn rate can be modified by the file located in the Config folder
-
+      - Needed some extra time to check how to properly store the initial spawn rate in a separeted file. Scriptable objects seem a good solution, but will only let change the value in development mode. I searched for a solution that would make possible to change the value once the game is built, but not sure if this was actually the purpose of this task. Anyway, this could be achieved using the same solution introduced for saving the high score, and it could be used for easily adding a difficulty level option (easy, medium, hard) according to the spawn rate value or initial platforms speed.
+      - Spawn rate can be modified by the file located in the Config folder, and so can be modified the player speed and initial platforms speed.
 
 - 6
    - [x] _Add some details to make the game scene prettier (lighting effects or particles, be creative)._ 
@@ -66,14 +61,13 @@ This project proves that architecture, design patterns, applying solid principle
        - Fading screen effect when loading (and restarting) Game scene  
 
 - 7
-   - [ ] _Write automated tests_ 
-
+   - [x] _Write automated tests_ 
+   -  _Time taken: about half an hour and 1 hour_
+      - Having a loosely coupled code architecture makes writing unit tests quite straightforward. Still, some playtesting and integration testing are required in order to check the whole application. 
+      
 ---
 Some side notes: 
-- Adjusted some physics parameters (Changed mass on rigidbody. Added Time.deltaTime on player and platform movement to make it framerate independent).
+- As it can be seen in the UML diagram, the code has been structured so there are no loops between scripts dependecies. The level acts a manager who uses a set of different components to handle all the game flow. Only the LevelController script has a direct reference to the scene elements, acting as an Entry point of the application. It will compose objects as needed and inject the required dependencies to other instances. 
 
-- Main character made some jittering when colliding with walls and platforms instead of snapping to them, but it seemed to be partially solved after playing with some rigidbody and speed parameters. 
+- The game was tested with several parameter values to make it fun (player speed, spawn rate, speed to be increased, etc)
 
-- Testing the game with several parameter values to make it fun (player speed, spawn rate, speed to be increased, etc)
-
-- Payed attention in having a good hierarchy structure in the scene
